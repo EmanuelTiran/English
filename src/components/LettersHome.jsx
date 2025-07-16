@@ -8,7 +8,7 @@ export default function LettersHome() {
       <h1 className="text-4xl font-extrabold text-gray-800 mb-12">בחר פעילות אותיות</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full">
         <Link
-          to="/Letters"
+          to="/Letters1"
           className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-xl p-8 flex flex-col items-center justify-center text-center transform transition-transform duration-300 hover:scale-105 hover:from-blue-600 hover:to-blue-800"
         >
           <span className="text-6xl mb-4">🅰️</span>
