@@ -3,24 +3,79 @@ import { Link } from 'react-router-dom'; // נניח שאתה משתמש ב-reac
 
 const Items = () => {
   const categories = [
-    { name: 'חיות', path: '/animals' },
-    { name: 'רהיטים', path: '/furniture' },
-    { name: 'מזון', path: '/toys' },
-    { name: 'בגדים', path: '/clothes' },
+    {
+      name: 'Animals',
+      path: '/Animal1',
+      emoji: '🦁',
+      description: 'Discover a wide variety of animals',
+      gradientFrom: 'from-blue-500',
+      gradientTo: 'to-blue-700',
+      hoverFrom: 'hover:from-blue-600',
+      hoverTo: 'hover:to-blue-800',
+      textColor: 'text-blue-100'
+    },
+    {
+      name: 'Furniture',
+      path: '/furniture',
+      emoji: '🛋️',
+      description: 'A world of home design',
+      gradientFrom: 'from-green-500',
+      gradientTo: 'to-green-700',
+      hoverFrom: 'hover:from-green-600',
+      hoverTo: 'hover:to-green-800',
+      textColor: 'text-green-100'
+    },
+    {
+      name: 'Vehicle',
+      path: '/Vehicle',
+      emoji: '🧸',
+      description: 'all kinds of vehicle',
+      gradientFrom: 'from-purple-500',
+      gradientTo: 'to-purple-700',
+      hoverFrom: 'hover:from-purple-600',
+      hoverTo: 'hover:to-purple-800',
+      textColor: 'text-purple-100'
+    },
+    {
+      name: 'clothes',
+      path: '/Clothes',
+      emoji: '👚',
+      description: 'Fashion for every season',
+      gradientFrom: 'from-red-500',
+      gradientTo: 'to-red-700',
+      hoverFrom: 'hover:from-red-600',
+      hoverTo: 'hover:to-red-800',
+      textColor: 'text-red-100'
+    },
+    {
+      name: 'Foods',
+      path: '/Foods',
+      emoji: '📚',
+      description: 'all kinds of foods',
+      gradientFrom: 'from-yellow-500',
+      gradientTo: 'to-yellow-700',
+      hoverFrom: 'hover:from-yellow-600',
+      hoverTo: 'hover:to-yellow-800',
+      textColor: 'text-yellow-100'
+    },
   ];
 
   return (
-    <div className="items-container">
-      <h2 className="text-3xl font-bold text-center text-blue-700 mb-8">קטגוריות פריטים</h2>
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-12">בחר קטגוריית פריטים</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full">
         {categories.map((category) => (
-          <li key={category.name} className="bg-white rounded-lg shadow-md p-6 transform transition duration-300 hover:scale-105 hover:shadow-lg">
-            <Link to={category.path} className="block text-center text-2xl font-semibold text-green-600 hover:text-green-800">
-              {category.name}
-            </Link>
-          </li>
+          <Link
+            key={category.name}
+            to={category.path}
+            className={`bg-gradient-to-r ${category.gradientFrom} ${category.gradientTo} text-white rounded-lg shadow-xl p-8 flex flex-col items-center justify-center text-center transform transition-transform duration-300 hover:scale-105 ${category.hoverFrom} ${category.hoverTo}`}
+          >
+            <span className="text-6xl mb-4">{category.emoji}</span>
+            <h2 className="text-2xl font-bold mb-2">{category.name}</h2>
+            <p className={category.textColor}>{category.description}</p>
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
