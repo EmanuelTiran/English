@@ -1,67 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
 
+// 🐾 סמלים של חיות
 const animalIcons = {
-    "Dog": "🐶",
-    "Cat": "🐱",
-    "Lion": "🦁",
-    "Elephant": "🐘",
-    "Tiger": "🐯",
-    "Horse": "🐎",
-    "Bird": "🐦",
-    "Fish": "🐟",
-    "Rabbit": "🐰",
-    "Chicken": "🐔",
-    "Wolf": "🐺",
-    "Monkey": "🐵",
-    "Bear": "🐻",
-    "Dolphin": "🐬",
-    "Shark": "🦈",
-    "Cow": "🐄",
-    "Pig": "🐷",
-    "Sheep": "🐑",
-    "Goat": "🐐",
-    "Deer": "🦌",
-    "Fox": "🦊",
-    "Panda": "🐼",
-    "Penguin": "🐧",
-    "Giraffe": "🦒",
-    "Zebra": "🦓",
-    "Kangaroo": "🦘",
-    "Owl": "🦉",
-    "Duck": "🦆",
-    "Snake": "🐍",
-    "Crocodile": "🐊",
-    "Turtle": "🐢",
-    "Frog": "🐸",
-    "Lizard": "🦎",
-    "Spider": "🕷️",
-    "Bee": "🐝",
-    "Ant": "🐜",
-    "Butterfly": "🦋",
-    "Whale": "🐳",
-    "Octopus": "🐙",
-    "Crab": "🦀",
-    "Lobster": "🦞",
-    "Shrimp": "🦐",
-    "Pigeon": "🕊️",
-    "Eagle": "🦅",
-    "Flamingo": "🦩",
-    "Rhino": "🦏",
-    "Hippo": "🦛",
-    "Snail": "🐌",
-    "Hedgehog": "🦔",
-    "Squirrel": "🐿️",
-    "Otter": "🦦",
-    "Raccoon": "🦝",
-    "Bat": "🦇"
+  "Dog": "🐶",
+  "Cat": "🐱",
+  "Lion": "🦁",
+  "Elephant": "🐘",
+  "Tiger": "🐯",
+  "Horse": "🐎",
+  "Bird": "🐦",
+  "Fish": "🐟",
+  "Rabbit": "🐰",
+  "Chicken": "🐔",
+  "Wolf": "🐺",
+  "Monkey": "🐵",
+  "Bear": "🐻",
+  "Dolphin": "🐬",
+  "Shark": "🦈",
+  "Cow": "🐄",
+  "Pig": "🐷",
+  "Sheep": "🐑",
+  "Goat": "🐐",
+  "Deer": "🦌",
+  "Fox": "🦊",
+  "Panda": "🐼",
+  "Penguin": "🐧",
+  "Giraffe": "🦒",
+  "Zebra": "🦓",
+  "Kangaroo": "🦘",
+  "Owl": "🦉",
+  "Duck": "🦆",
+  "Snake": "🐍",
+  "Crocodile": "🐊",
+  "Turtle": "🐢",
+  "Frog": "🐸",
+  "Lizard": "🦎",
+  "Spider": "🕷️",
+  "Bee": "🐝",
+  "Ant": "🐜",
+  "Butterfly": "🦋",
+  "Whale": "🐳",
+  "Octopus": "🐙",
+  "Crab": "🦀",
+  "Lobster": "🦞",
+  "Shrimp": "🦐",
+  "Pigeon": "🕊️",
+  "Eagle": "🦅",
+  "Flamingo": "🦩",
+  "Rhino": "🦏",
+  "Hippo": "🦛",
+  "Snail": "🐌",
+  "Hedgehog": "🦔",
+  "Squirrel": "🐿️",
+  "Otter": "🦦",
+  "Raccoon": "🦝",
+  "Bat": "🦇"
+};
+
+// ✅ פונקציית צלילים
+const playSound = (type) => {
+  const sounds = {
+    correct: "/sounds/correct.mp3",
+    incorrect: "/sounds/wrong.mp3",
+    win: "/sounds/win.mp3"
   };
+  const audio = new Audio(sounds[type]);
+  audio.play();
+};
 
 const AnimalMatchingApp = ({ animals }) => {
   const getRandomAnimal = (completedSet) => {
     const available = animals.filter(a => !completedSet.has(a));
-    if (available.length === 0) return null;
-    return available[Math.floor(Math.random() * available.length)];
+    return available.length === 0 ? null : available[Math.floor(Math.random() * available.length)];
   };
 
   const [currentAnimal, setCurrentAnimal] = useState(() => getRandomAnimal(new Set()));
@@ -72,7 +83,6 @@ const AnimalMatchingApp = ({ animals }) => {
   const [completedAnimals, setCompletedAnimals] = useState(new Set());
   const [gameComplete, setGameComplete] = useState(false);
 
-  // פונקציית דיבור
   const speakAnimal = (name) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(name);
@@ -93,12 +103,10 @@ const AnimalMatchingApp = ({ animals }) => {
   function generateOptions(correct) {
     const options = [correct];
     const otherAnimals = animals.filter(a => a !== correct);
-
     while (options.length < 4 && otherAnimals.length > 0) {
       const rand = otherAnimals[Math.floor(Math.random() * otherAnimals.length)];
       if (!options.includes(rand)) options.push(rand);
     }
-
     return options.sort(() => Math.random() - 0.5);
   }
 
@@ -107,15 +115,17 @@ const AnimalMatchingApp = ({ animals }) => {
     setTotalQuestions(prev => prev + 1);
 
     if (isCorrect) {
+      playSound("correct");
       const newCompleted = new Set([...completedAnimals, currentAnimal]);
       setCompletedAnimals(newCompleted);
       setScore(prev => prev + 1);
       setShowFeedback('correct');
-
       if (newCompleted.size >= animals.length) {
         setGameComplete(true);
+        playSound("win");
       }
     } else {
+      playSound("incorrect");
       setShowFeedback('incorrect');
     }
 
@@ -219,16 +229,9 @@ const AnimalMatchingApp = ({ animals }) => {
                 text-xl font-bold py-6 px-4 rounded-xl border-4 transition-all duration-200
                 ${showFeedback === ''
                   ? 'bg-gray-50 border-gray-300 hover:border-blue-400 hover:bg-blue-50 active:scale-95'
-                  : 'opacity-50 cursor-not-allowed'
-                }
-                ${showFeedback === 'correct' && name === currentAnimal
-                  ? 'bg-green-100 border-green-400 text-green-700'
-                  : ''
-                }
-                ${showFeedback === 'incorrect' && name === currentAnimal
-                  ? 'bg-green-100 border-green-400 text-green-700'
-                  : ''
-                }
+                  : 'opacity-50 cursor-not-allowed'}
+                ${showFeedback === 'correct' && name === currentAnimal ? 'bg-green-100 border-green-400 text-green-700' : ''}
+                ${showFeedback === 'incorrect' && name === currentAnimal ? 'bg-green-100 border-green-400 text-green-700' : ''}
               `}
             >
               {name}
@@ -237,17 +240,15 @@ const AnimalMatchingApp = ({ animals }) => {
         </div>
 
         {showFeedback && (
-          <div className={`text-center py-4 rounded-2xl ${
+          <div className={`text-center py-4 rounded-2xl animate__animated ${
             showFeedback === 'correct'
-              ? 'bg-green-100 border-2 border-green-400'
-              : 'bg-red-100 border-2 border-red-400'
+              ? 'bg-green-100 border-2 border-green-400 animate__bounceIn'
+              : 'bg-red-100 border-2 border-red-400 animate__shakeX'
           }`}>
             <div className="text-4xl mb-2">
               {showFeedback === 'correct' ? '🎉' : '❌'}
             </div>
-            <p className={`text-xl font-semibold ${
-              showFeedback === 'correct' ? 'text-green-700' : 'text-red-700'
-            }`}>
+            <p className={`text-xl font-semibold ${showFeedback === 'correct' ? 'text-green-700' : 'text-red-700'}`}>
               {showFeedback === 'correct' ? 'Great job!' : 'Try again!'}
             </p>
             {showFeedback === 'incorrect' && (

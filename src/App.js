@@ -4,15 +4,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './components/HomePage';
 import AboutPage from './components/AboutPage';
-import ContactPage from './components/ContactPage';
 import LetterMatchingApp from './components/LetterMatchingApp ';
 import LetterKeyboard from './components/LetterKeyboard';
 import LetterSlider from './components/LetterSlider';
 import LettersHome from './components/LettersHome';
 import AnimalTable from './components/AnimalTable';
+import Items from './components/Items';
 import AnimalSlider from './components/AnimalSlider';
 import AnimalMatchingApp from "./components/AnimalMatchingApp";
-import Items from "./components/Items";
 
 function App() {
   const [animalsToLearn, setAnimalsToLearn] = useState([]);
@@ -21,7 +20,7 @@ function App() {
     if (!animalsToLearn.includes(animal)) {
       setAnimalsToLearn((prev) => [...prev, animal]);
     }
-
+    console.log(animalsToLearn)
   };
   return (
     <Router>
@@ -35,7 +34,7 @@ function App() {
             <Route path="/Letters1" element={<LetterMatchingApp />} />
             <Route path="/Letters2" element={<LetterKeyboard />} />
             <Route path="/Letters3" element={<LetterSlider />} />
-            <Route path="/Items" element={<Items />} />
+            <Route path="/Items" element={<Items/>} />
             <Route path="/Animal1" element={<AnimalTable onAddToLearn={addToLearn}/>} />
             <Route path="/Animal2" element={<AnimalSlider animals={animalsToLearn}/>} />
             <Route path="/Animal3" element={<AnimalMatchingApp animals={animalsToLearn}/>} />
