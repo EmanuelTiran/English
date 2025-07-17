@@ -12,15 +12,26 @@ import AnimalTable from './components/AnimalTable';
 import Items from './components/Items';
 import AnimalSlider from './components/AnimalSlider';
 import AnimalMatchingApp from "./components/AnimalMatchingApp";
+import FoodTable from "./components/FoodTable";
+import FoodSlider from "./components/FoodSlider";
+import FoodMatchingApp from "./components/FoodMatchingApp ";
 
 function App() {
   const [animalsToLearn, setAnimalsToLearn] = useState([]);
+  const [foodToLearn, setFoodToLearn] = useState([]);
 
   const addToLearn = (animal) => {
     if (!animalsToLearn.includes(animal)) {
       setAnimalsToLearn((prev) => [...prev, animal]);
     }
     console.log(animalsToLearn)
+  };
+
+  const addToLearnFood = (foodItem) => {
+    if (!foodToLearn.includes(foodItem)) {
+      setFoodToLearn((prev) => [...prev, foodItem]);
+    }
+    console.log(foodToLearn);
   };
   return (
     <Router>
@@ -38,6 +49,9 @@ function App() {
             <Route path="/Animal1" element={<AnimalTable onAddToLearn={addToLearn}/>} />
             <Route path="/Animal2" element={<AnimalSlider animals={animalsToLearn}/>} />
             <Route path="/Animal3" element={<AnimalMatchingApp animals={animalsToLearn}/>} />
+            <Route path="/Foods" element={<FoodTable onAddToLearn={addToLearnFood}/>} />
+            <Route path="/Food2" element={<FoodSlider foodItems={foodToLearn}/>} />
+            <Route path="/Food3" element={<FoodMatchingApp foodItems={foodToLearn}/>} />
             <Route path="*" element={<h2 className="text-red-500 text-2xl">404 - Page Not Found</h2>} />
           </Routes>
         </main>

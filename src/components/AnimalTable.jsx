@@ -139,7 +139,8 @@ export default function AnimalTable({ onAddToLearn }) {
                     end
                 >
                     <span className="text-lg">🎯</span>
-                    <span className="text-lg">Matching Animal Game</span>        </NavLink>
+                    <span className="text-lg">Matching Animal Game</span>
+                </NavLink>
             </nav>
         </div>
     );

@@ -77,6 +77,7 @@ const AnimalMatchingApp = ({ animals }) => {
 
   const [currentAnimal, setCurrentAnimal] = useState(() => getRandomAnimal(new Set()));
   const [options, setOptions] = useState(() => currentAnimal ? generateOptions(currentAnimal) : []);
+  const [backgroundAudio] = useState(() => new Audio('/sounds/background.mp3'));
   const [score, setScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [showFeedback, setShowFeedback] = useState('');
@@ -99,6 +100,20 @@ const AnimalMatchingApp = ({ animals }) => {
       return () => clearTimeout(timer);
     }
   }, [currentAnimal]);
+  useEffect(() => {
+    backgroundAudio.loop = true;
+    backgroundAudio.volume = 0.4;
+
+    backgroundAudio.play().catch(e => {
+      console.warn("Autoplay failed. User interaction is required.", e);
+    });
+
+    return () => {
+      backgroundAudio.pause();
+      backgroundAudio.currentTime = 0;
+    };
+  }, []);
+
 
   function generateOptions(correct) {
     const options = [correct];
@@ -122,6 +137,7 @@ const AnimalMatchingApp = ({ animals }) => {
       setShowFeedback('correct');
       if (newCompleted.size >= animals.length) {
         setGameComplete(true);
+        backgroundAudio.pause();
         playSound("win");
       }
     } else {
@@ -142,6 +158,7 @@ const AnimalMatchingApp = ({ animals }) => {
   const resetGame = () => {
     const fresh = new Set();
     const first = getRandomAnimal(fresh);
+    backgroundAudio.play();
     setCurrentAnimal(first);
     setOptions(first ? generateOptions(first) : []);
     setScore(0);
@@ -240,11 +257,10 @@ const AnimalMatchingApp = ({ animals }) => {
         </div>
 
         {showFeedback && (
-          <div className={`text-center py-4 rounded-2xl animate__animated ${
-            showFeedback === 'correct'
+          <div className={`text-center py-4 rounded-2xl animate__animated ${showFeedback === 'correct'
               ? 'bg-green-100 border-2 border-green-400 animate__bounceIn'
               : 'bg-red-100 border-2 border-red-400 animate__shakeX'
-          }`}>
+            }`}>
             <div className="text-4xl mb-2">
               {showFeedback === 'correct' ? '🎉' : '❌'}
             </div>
