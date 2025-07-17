@@ -2,10 +2,18 @@ import React from 'react';
 
 function HomePage() {
   return (
-    <div className="p-8">
-      <h2 className="text-3xl font-bold text-gray-800 mb-4">Welcome Home!</h2>
-      <p className="text-lg text-gray-600">This is the main content of your home page.</p>
-    </div>
+<div
+  className="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center text-center px-4"
+  style={{ backgroundImage: "url('/images/image.png')" }}
+>
+  <div className="bg-black bg-opacity-50 p-6 rounded-xl max-w-3xl">
+    <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+      Welcome to Fun English!
+    </h1>
+  </div>
+</div>
+
+
   );
 }
 
