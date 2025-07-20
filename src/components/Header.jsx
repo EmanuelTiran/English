@@ -16,7 +16,13 @@ function Header() {
           className="text-2xl font-bold hover:text-blue-400 transition duration-300"
           end
         >
-          My English App
+          My English App{" "}
+          <span>
+            <img
+              src="/images/logo.jpg"
+              alt="Logo"
+ className="h-8 w-8 rounded-full inline-block"             />
+          </span>
         </NavLink>
 
         {/* כפתור המבורגר לתפריט נייד */}

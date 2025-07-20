@@ -94,12 +94,12 @@ const AnimalMatchingApp = ({ animals }) => {
     }
   };
 
-  useEffect(() => {
-    if (currentAnimal) {
-      const timer = setTimeout(() => speakAnimal(currentAnimal), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [currentAnimal]);
+  // useEffect(() => {
+  //   if (currentAnimal) {
+  //     const timer = setTimeout(() => speakAnimal(currentAnimal), 500);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [currentAnimal]);
   useEffect(() => {
     backgroundAudio.loop = true;
     backgroundAudio.volume = 0.4;
