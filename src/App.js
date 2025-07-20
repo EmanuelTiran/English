@@ -15,6 +15,7 @@ import AnimalMatchingApp from "./components/AnimalMatchingApp";
 import FoodTable from "./components/FoodTable";
 import FoodSlider from "./components/FoodSlider";
 import FoodMatchingApp from "./components/FoodMatchingApp ";
+import HebrewEnglishTranslator from "./components/HebrewEnglishTranslator";
 
 function App() {
   const [animalsToLearn, setAnimalsToLearn] = useState([]);
@@ -52,6 +53,8 @@ function App() {
             <Route path="/Foods" element={<FoodTable onAddToLearn={addToLearnFood}/>} />
             <Route path="/Food2" element={<FoodSlider foodItems={foodToLearn}/>} />
             <Route path="/Food3" element={<FoodMatchingApp foodItems={foodToLearn}/>} />
+            <Route path="/123" element={<HebrewEnglishTranslator/>} />
+            {/* <Route path="/Hearing" element={<Hearing />} /> */}
             <Route path="*" element={<h2 className="text-red-500 text-2xl">404 - Page Not Found</h2>} />
           </Routes>
         </main>

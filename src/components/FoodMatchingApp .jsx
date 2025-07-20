@@ -73,6 +73,7 @@ const FoodMatchingApp = ({ foodItems }) => {
     };
 
     const [currentFoodItem, setCurrentFoodItem] = useState(() => getRandomFoodItem(new Set()));
+    const [backgroundAudio] = useState(() => new Audio('/sounds/background.mp3'));
     const [options, setOptions] = useState(() => currentFoodItem ? generateOptions(currentFoodItem) : []);
     const [score, setScore] = useState(0);
     const [totalQuestions, setTotalQuestions] = useState(0);
@@ -97,6 +98,21 @@ const FoodMatchingApp = ({ foodItems }) => {
         }
     }, [currentFoodItem]);
 
+    useEffect(() => {
+        backgroundAudio.loop = true;
+        backgroundAudio.volume = 0.4;
+      
+        backgroundAudio.play().catch(e => {
+          console.warn("Autoplay failed. User interaction is required.", e);
+        });
+      
+        return () => {
+          backgroundAudio.pause();
+          backgroundAudio.currentTime = 0;
+        };
+      }, []);
+      
+
     function generateOptions(correct) {
         const options = [correct];
         const otherFoodItems = foodItems.filter(item => item !== correct);
@@ -119,6 +135,7 @@ const FoodMatchingApp = ({ foodItems }) => {
             setShowFeedback('correct');
             if (newCompleted.size >= foodItems.length) {
                 setGameComplete(true);
+                backgroundAudio.pause();
                 playSound("win");
             }
         } else {
@@ -139,6 +156,7 @@ const FoodMatchingApp = ({ foodItems }) => {
     const resetGame = () => {
         const fresh = new Set();
         const first = getRandomFoodItem(fresh);
+        backgroundAudio.play(); 
         setCurrentFoodItem(first);
         setOptions(first ? generateOptions(first) : []);
         setScore(0);
