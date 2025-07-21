@@ -86,7 +86,7 @@ const Hearing = ({ sentences }) => {
     useEffect(() => {
         if (backgroundAudio) {
             backgroundAudio.loop = true;
-            backgroundAudio.volume = 0.3;
+            backgroundAudio.volume = 0.1;
 
             backgroundAudio.play().catch(e => {
                 console.warn("Autoplay failed. User interaction is required.", e);
