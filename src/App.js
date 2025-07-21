@@ -17,6 +17,7 @@ import MatchingGame from "./components/ItemMatchingApp";
 import ItemSlider from "./components/ItemSlider";
 import ItemTable from "./components/ItemTable";
 import Hearing from "./components/Hearing";
+import UndoButton from "./components/UndoButton";
 
 function App() {
   const [animalsToLearn, setAnimalsToLearn] = useState([]);

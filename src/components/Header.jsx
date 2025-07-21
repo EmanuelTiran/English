@@ -1,8 +1,15 @@
-import React, { useState } from 'react'; // ייבוא useState לניהול מצב
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import UndoButton from './UndoButton';
 
 function Header() {
-  const [isOpen, setIsOpen] = useState(false); // מצב לניהול פתיחה/סגירה של תפריט נייד
+  const [isOpen, setIsOpen] = useState(false);
+  const [showUndo, setShowUndo] = useState(false); // שליטה על הצגת UndoButton
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowUndo(true), 100); // המתנה קלה כדי להימנע מרינדור מיידי
+    return () => clearTimeout(timer);
+  }, []);
 
   const getNavLinkClass = ({ isActive }) =>
     `block px-3 py-2 rounded-md text-base font-medium hover:text-blue-400 transition duration-300 ${isActive ? 'text-blue-400 font-bold' : 'text-white'}`;
@@ -10,26 +17,21 @@ function Header() {
   return (
     <header className="bg-gray-800 text-white p-4 shadow-md">
       <nav className="container mx-auto flex justify-between items-center flex-wrap">
-        {/* לוגו / כותרת האפליקציה */}
+        {/* לוגו */}
         <NavLink
           to="/"
-          className="text-2xl font-bold hover:text-blue-400 transition duration-300"
+          className="text-2xl font-bold hover:text-blue-400 transition duration-300 flex items-center gap-2"
           end
         >
           My English App{" "}
-          <span>
-            <img
-              src="/images/logo.jpg"
-              alt="Logo"
- className="h-8 w-8 rounded-full inline-block"             />
-          </span>
+          <img src="/images/logo.jpg" alt="Logo" className="h-8 w-8 rounded-full" />
         </NavLink>
 
-        {/* כפתור המבורגר לתפריט נייד */}
+        {/* כפתור תפריט במובייל */}
         <div className="block lg:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-white hover:text-blue-400 focus:outline-none focus:text-blue-400"
+            className="text-white hover:text-blue-400 focus:outline-none"
           >
             <svg
               className="h-6 w-6 fill-current"
@@ -52,9 +54,9 @@ function Header() {
           </button>
         </div>
 
-        {/* תפריט ניווט - מוסתר בנייד ומוצג בדסקטופ, או מוצג בנייד כש-isOpen נכון */}
+        {/* תפריט ניווט */}
         <div className={`${isOpen ? 'block' : 'hidden'} w-full lg:flex lg:items-center lg:w-auto`}>
-          <ul className="flex flex-col lg:flex-row lg:space-x-6 lg:mt-0 mt-4">
+          <ul className="flex flex-col lg:flex-row lg:space-x-6 lg:mt-0 mt-4 items-center">
             <li>
               <NavLink to="/" className={getNavLinkClass} end onClick={() => setIsOpen(false)}>
                 Home
@@ -80,6 +82,11 @@ function Header() {
                 Hearing
               </NavLink>
             </li>
+            {showUndo && (
+              <li>
+                <UndoButton />
+              </li>
+            )}
           </ul>
         </div>
       </nav>
