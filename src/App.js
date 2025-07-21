@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { animalIcons, animals, foodIcons, foodItems } from "./icons";
+import { linksToAnimal, linksToFood } from "./links";
 
 import Header from './components/Header';
 import HomePage from './components/HomePage';
@@ -9,15 +10,13 @@ import AboutPage from './components/AboutPage';
 import LetterMatchingApp from './components/LetterMatchingApp ';
 import LetterKeyboard from './components/LetterKeyboard';
 import LettersHome from './components/LettersHome';
-import AnimalTable from './components/item/animal/AnimalTable';
 import Items from './components/Items';
-import FoodTable from "./components/item/foods/FoodTable";
 import HebrewEnglishTranslator from "./components/HebrewEnglishTranslator";
 import HumanBody from "./components/item/body/HumanBody";
 import MatchingGame from "./components/ItemMatchingApp";
 import ItemSlider from "./components/ItemSlider";
 import ItemTable from "./components/ItemTable";
-import { linksToAnimal, linksToFood } from "./links";
+import Hearing from "./components/Hearing";
 
 function App() {
   const [animalsToLearn, setAnimalsToLearn] = useState([]);
@@ -78,7 +77,7 @@ function App() {
 
             <Route path="/123" element={<HebrewEnglishTranslator />} />
             <Route path="/body" element={<HumanBody />} />
-            {/* <Route path="/Hearing" element={<Hearing />} /> */}
+            <Route path="/Hearing" element={<Hearing />} />
             <Route path="*" element={<h2 className="text-red-500 text-2xl">404 - Page Not Found</h2>} />
           </Routes>
         </main>
