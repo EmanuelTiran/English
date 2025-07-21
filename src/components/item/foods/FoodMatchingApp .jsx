@@ -1,59 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
+import { foodIcons } from '../../../icons'; // נתיב יחסי לקובץ icons.js
 
-// 🍔 Food item icons
-const foodIcons = {
-    "Apple": "🍎",
-    "Banana": "🍌",
-    "Bread": "🍞",
-    "Cheese": "🧀",
-    "Chicken": "🍗",
-    "Rice": "🍚",
-    "Pasta": "🍝",
-    "Egg": "🥚",
-    "Milk": "🥛",
-    "Fish": "🐟",
-    "Carrot": "🥕",
-    "Potato": "🥔",
-    "Tomato": "🍅",
-    "Broccoli": "🥦",
-    "Onion": "🧅",
-    "Garlic": "🧄",
-    "Orange": "🍊",
-    "Grapes": "🍇",
-    "Strawberry": "🍓",
-    "Watermelon": "🍉",
-    "Pizza": "🍕",
-    "Hamburger": "🍔",
-    "Hot Dog": "🌭",
-    "French Fries": "🍟",
-    "Salad": "🥗",
-    "Soup": "🥣",
-    "Sandwich": "🥪",
-    "Cake": "🍰",
-    "Cookie": "🍪",
-    "Ice Cream": "🍦",
-    "Coffee": "☕",
-    "Tea": "🍵",
-    "Juice": "🍹",
-    "Water": "💧",
-    "Doughnut": "🍩",
-    "Candy": "🍬",
-    "Chocolate": "🍫",
-    "Popcorn": "🍿",
-    "Honey": "🍯",
-    "Sugar": "🍚",
-    "Salt": "🧂",
-    "Pepper": "🌶️",
-    "Oil": "🍾",
-    "Vinegar": "🍾",
-    "Butter": "🧈",
-    "Jam": "🍓",
-    "Yogurt": "🍦",
-    "Cereal": "🥣",
-    "Pancake": "🥞",
-    "Sausage": "🌭",
-};
+// 
 
 // ✅ Sound function
 const playSound = (type) => {

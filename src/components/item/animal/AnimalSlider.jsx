@@ -2,62 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import { animalIcons } from '../../../icons'; 
 
-const animalIcons = {
-    "Dog": "🐶",
-    "Cat": "🐱",
-    "Lion": "🦁",
-    "Elephant": "🐘",
-    "Tiger": "🐯",
-    "Horse": "🐎",
-    "Bird": "🐦",
-    "Fish": "🐟",
-    "Rabbit": "🐰",
-    "Chicken": "🐔",
-    "Wolf": "🐺",
-    "Monkey": "🐵",
-    "Bear": "🐻",
-    "Dolphin": "🐬",
-    "Shark": "🦈",
-    "Cow": "🐄",
-    "Pig": "🐷",
-    "Sheep": "🐑",
-    "Goat": "🐐",
-    "Deer": "🦌",
-    "Fox": "🦊",
-    "Panda": "🐼",
-    "Penguin": "🐧",
-    "Giraffe": "🦒",
-    "Zebra": "🦓",
-    "Kangaroo": "🦘",
-    "Owl": "🦉",
-    "Duck": "🦆",
-    "Snake": "🐍",
-    "Crocodile": "🐊",
-    "Turtle": "🐢",
-    "Frog": "🐸",
-    "Lizard": "🦎",
-    "Spider": "🕷️",
-    "Bee": "🐝",
-    "Ant": "🐜",
-    "Butterfly": "🦋",
-    "Whale": "🐳",
-    "Octopus": "🐙",
-    "Crab": "🦀",
-    "Lobster": "🦞",
-    "Shrimp": "🦐",
-    "Pigeon": "🕊️",
-    "Eagle": "🦅",
-    "Flamingo": "🦩",
-    "Rhino": "🦏",
-    "Hippo": "🦛",
-    "Snail": "🐌",
-    "Hedgehog": "🦔",
-    "Squirrel": "🐿️",
-    "Otter": "🦦",
-    "Raccoon": "🦝",
-    "Bat": "🦇"
-  };
+
 
 const speakAnimal = (animal) => {
   const utter = new SpeechSynthesisUtterance(animal);

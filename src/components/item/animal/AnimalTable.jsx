@@ -3,63 +3,10 @@ import { SpeakerWaveIcon } from "@heroicons/react/24/solid";
 import { Plus, CheckCircle } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import { animals } from '../../../icons'; // נתיב יחסי לקובץ icons.js
 
 
-const animals = [
-    { name: "Dog", icon: "🐶" },
-    { name: "Cat", icon: "🐱" },
-    { name: "Lion", icon: "🦁" },
-    { name: "Elephant", icon: "🐘" },
-    { name: "Tiger", icon: "🐯" },
-    { name: "Horse", icon: "🐎" },
-    { name: "Bird", icon: "🐦" },
-    { name: "Fish", icon: "🐟" },
-    { name: "Rabbit", icon: "🐰" },
-    { name: "Chicken", icon: "🐔" },
-    { name: "Wolf", icon: "🐺" },
-    { name: "Monkey", icon: "🐵" },
-    { name: "Bear", icon: "🐻" },
-    { name: "Dolphin", icon: "🐬" },
-    { name: "Shark", icon: "🦈" },
-    { name: "Cow", icon: "🐄" },
-    { name: "Pig", icon: "🐷" },
-    { name: "Sheep", icon: "🐑" },
-    { name: "Goat", icon: "🐐" },
-    { name: "Deer", icon: "🦌" },
-    { name: "Fox", icon: "🦊" },
-    { name: "Panda", icon: "🐼" },
-    { name: "Penguin", icon: "🐧" },
-    { name: "Giraffe", icon: "🦒" },
-    { name: "Zebra", icon: "🦓" },
-    { name: "Kangaroo", icon: "🦘" },
-    { name: "Owl", icon: "🦉" },
-    { name: "Duck", icon: "🦆" },
-    { name: "Snake", icon: "🐍" },
-    { name: "Crocodile", icon: "🐊" },
-    { name: "Turtle", icon: "🐢" },
-    { name: "Frog", icon: "🐸" },
-    { name: "Lizard", icon: "🦎" },
-    { name: "Spider", icon: "🕷️" },
-    { name: "Bee", icon: "🐝" },
-    { name: "Ant", icon: "🐜" },
-    { name: "Butterfly", icon: "🦋" },
-    { name: "Whale", icon: "🐳" },
-    { name: "Octopus", icon: "🐙" },
-    { name: "Crab", icon: "🦀" },
-    { name: "Lobster", icon: "🦞" },
-    { name: "Shrimp", icon: "🦐" },
-    { name: "Pigeon", icon: "🕊️" },
-    { name: "Eagle", icon: "🦅" },
-    { name: "Flamingo", icon: "🦩" },
-    { name: "Rhino", icon: "🦏" },
-    { name: "Hippo", icon: "🦛" },
-    { name: "Snail", icon: "🐌" },
-    { name: "Hedgehog", icon: "🦔" },
-    { name: "Squirrel", icon: "🐿️" },
-    { name: "Otter", icon: "🦦" },
-    { name: "Raccoon", icon: "🦝" },
-    { name: "Bat", icon: "🦇" },
-];
+
 
 
 const speakWord = (word) => {

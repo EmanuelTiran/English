@@ -3,59 +3,9 @@ import { SpeakerWaveIcon } from "@heroicons/react/24/solid"; // Not used in this
 import { Plus, CheckCircle } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import { foodItems } from '../../../icons'; // נתיב יחסי לקובץ icons.js
 
-const foodItems = [
-    { name: "Apple", icon: "🍎" },
-    { name: "Banana", icon: "🍌" },
-    { name: "Bread", icon: "🍞" },
-    { name: "Cheese", icon: "🧀" },
-    { name: "Chicken", icon: "🍗" },
-    { name: "Rice", icon: "🍚" },
-    { name: "Pasta", icon: "🍝" },
-    { name: "Egg", icon: "🥚" },
-    { name: "Milk", icon: "🥛" },
-    { name: "Fish", icon: "🐟" },
-    { name: "Carrot", icon: "🥕" },
-    { name: "Potato", icon: "🥔" },
-    { name: "Tomato", icon: "🍅" },
-    { name: "Broccoli", icon: "🥦" },
-    { name: "Onion", icon: "🧅" },
-    { name: "Garlic", icon: "🧄" },
-    { name: "Orange", icon: "🍊" },
-    { name: "Grapes", icon: "🍇" },
-    { name: "Strawberry", icon: "🍓" },
-    { name: "Watermelon", icon: "🍉" },
-    { name: "Pizza", icon: "🍕" },
-    { name: "Hamburger", icon: "🍔" },
-    { name: "Hot Dog", icon: "🌭" },
-    { name: "French Fries", icon: "🍟" },
-    { name: "Salad", icon: "🥗" },
-    { name: "Soup", icon: "🥣" },
-    { name: "Sandwich", icon: "🥪" },
-    { name: "Cake", icon: "🍰" },
-    { name: "Cookie", icon: "🍪" },
-    { name: "Ice Cream", icon: "🍦" },
-    { name: "Coffee", icon: "☕" },
-    { name: "Tea", icon: "🍵" },
-    { name: "Juice", icon: "🍹" },
-    { name: "Water", icon: "💧" },
-    { name: "Doughnut", icon: "🍩" },
-    { name: "Candy", icon: "🍬" },
-    { name: "Chocolate", icon: "🍫" },
-    { name: "Popcorn", icon: "🍿" },
-    { name: "Honey", icon: "🍯" },
-    { name: "Sugar", icon: "🍚" }, // Reusing rice icon for sugar, or can find a better one
-    { name: "Salt", icon: "🧂" },
-    { name: "Pepper", icon: "🌶️" }, // Reusing pepper icon for spice, or can find a better one
-    { name: "Oil", icon: "🍾" }, // Reusing bottle icon for oil, or can find a better one
-    { name: "Vinegar", icon: "🍾" }, // Reusing bottle icon for vinegar
-    { name: "Butter", icon: "🧈" },
-    { name: "Jam", icon: "🍓" }, // Reusing strawberry icon for jam
-    { name: "Yogurt", icon: "🍦" }, // Reusing ice cream icon for yogurt
-    { name: "Cereal", icon: "🥣" }, // Reusing bowl icon for cereal
-    { name: "Pancake", icon: "🥞" },
-    { name: "Sausage", icon: "🌭" }, // Reusing hot dog icon for sausage
-];
+
 
 
 const speakWord = (word) => {

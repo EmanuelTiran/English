@@ -1,0 +1,114 @@
+/* InteractiveBody.css */
+
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #bfdbfe; /* Tailwind: bg-blue-100 */
+  }
+  
+  /* Layout and Container Styles */
+  .interactive-body-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  .interactive-body-title {
+    font-size: 2.5rem; /* Tailwind: text-4xl */
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #1d4ed8; /* Tailwind: text-blue-700 */
+  }
+  
+  .body-wrapper {
+    position: relative;
+    width: 300px;
+    height: 600px;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+  
+  /* Shared Body Part Styles */
+  .body-part {
+    position: absolute;
+    cursor: pointer;
+    border: 4px solid transparent;
+    text-align: center;
+    font-size: 0.75rem; /* Base font size for all parts */
+    /* Add transition for smoother selection/hover effects if desired */
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  /* State-based Styles */
+  .body-part.selected {
+    border-color: #ef4444; /* Tailwind: border-red-500 */
+  }
+  
+  /* Individual Body Part Styles */
+  
+  /* Head */
+  .part-head {
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6rem;
+    height: 6rem;
+    border-radius: 9999px; /* Fully rounded */
+    background-color: #fde68a; /* Tailwind: bg-yellow-300 */
+    padding-top: 2rem; /* Adjust padding for text inside */
+    font-size: 1rem; /* Specific font size for head */
+  }
+  
+  /* Torso */
+  .part-torso {
+    top: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7rem;
+    height: 10rem;
+    background-color: #86efac; /* Tailwind: bg-green-300 */
+    padding-top: 4rem; /* Adjust padding for text inside */
+    font-size: 1rem; /* Specific font size for torso */
+  }
+  
+  /* Arms */
+  .part-left-arm,
+  .part-right-arm {
+    top: 9rem;
+    width: 2.5rem;
+    height: 7rem;
+    background-color: #f9a8d4; /* Tailwind: bg-pink-300 */
+    padding-top: 2.5rem; /* Adjust padding for text inside */
+  }
+  
+  .part-left-arm {
+    left: 30px;
+  }
+  
+  .part-right-arm {
+    right: 30px;
+  }
+  
+  /* Legs */
+  .part-left-leg,
+  .part-right-leg {
+    bottom: 5rem;
+    width: 2.5rem;
+    height: 7rem;
+    background-color: #d8b4fe; /* Tailwind: bg-purple-300 */
+    padding-top: 2.5rem; /* Adjust padding for text inside */
+  }
+  
+  .part-left-leg {
+    left: 75px;
+  }
+  
+  .part-right-leg {
+    right: 75px;
+  }
