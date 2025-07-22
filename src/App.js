@@ -26,9 +26,12 @@ function App() {
 
 
   const addToLearn = (animal) => {
-    if (!animalsToLearn.includes(animal)) {
-      setAnimalsToLearn((prev) => [...prev, animal]);
+    if (animal !== undefined) {
+      if (!animalsToLearn.includes(animal)) {
+        setAnimalsToLearn((prev) => [...prev, animal]);
+      }
     }
+
     console.log({ animalsToLearn })
   };
 
@@ -60,6 +63,7 @@ function App() {
               nameField="name"
               iconField="icon"
               onAddToLearn={addToLearn}
+              existingItems={animalsToLearn}
               navLinks={linksToAnimal}
             />} />
             <Route path="/Animal2" element={<ItemSlider items={animalsToLearn} itemIcons={animalIcons} />} />
@@ -71,6 +75,7 @@ function App() {
               nameField="name"
               iconField="icon"
               onAddToLearn={addToLearnFood}
+              existingItems={foodToLearn}
               navLinks={linksToFood}
             />} />
             <Route path="/Food2" element={<ItemSlider items={foodToLearn} itemIcons={foodIcons} />} />

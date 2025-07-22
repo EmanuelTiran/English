@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, XCircle } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -16,18 +16,36 @@ export default function ItemTable({
   nameField = "name",
   onAddToLearn = () => {},
   navLinks = [],
+  existingItems = [], // רשימת הפריטים שכבר נבחרו
 }) {
-  const [addedItems, setAddedItems] = useState(new Set());
+  const [addedItems, setAddedItems] = useState(() => {
+    // אתחול ה-state על בסיס הפריטים הקיימים
+    const initialMap = new Map();
+    existingItems.forEach((item, index) => {
+      initialMap.set(item, index + 1);
+    });
+    return initialMap;
+  });
+  const [orderCounter, setOrderCounter] = useState(existingItems.length + 1);
 
   const toggleItem = (itemName) => {
-    const newSet = new Set(addedItems);
-    if (newSet.has(itemName)) {
-      newSet.delete(itemName);
+    const newMap = new Map(addedItems);
+    if (newMap.has(itemName)) {
+      newMap.delete(itemName);
+      // עדכון מספרי הסידור של הפריטים שנותרו
+      const remainingItems = Array.from(newMap.entries()).sort((a, b) => a[1] - b[1]);
+      const updatedMap = new Map();
+      remainingItems.forEach(([name], index) => {
+        updatedMap.set(name, index + 1);
+      });
+      setAddedItems(updatedMap);
+      setOrderCounter(updatedMap.size + 1);
     } else {
-      newSet.add(itemName);
+      newMap.set(itemName, orderCounter);
+      setAddedItems(newMap);
+      setOrderCounter(orderCounter + 1);
       onAddToLearn(itemName);
     }
-    setAddedItems(newSet);
   };
 
   return (
@@ -49,6 +67,7 @@ export default function ItemTable({
           const itemName = item[nameField];
           const itemIcon = item[iconField];
           const isAdded = addedItems.has(itemName);
+          const orderNumber = addedItems.get(itemName);
 
           return (
             <div
@@ -77,17 +96,28 @@ export default function ItemTable({
                 {itemName}
               </div>
 
-              <button
-                onClick={() => toggleItem(itemName)}
-                className="mt-4 transition-all"
-                title={isAdded ? "Remove from learning" : "Add to learning"}
-              >
-                {isAdded ? (
-                  <XCircle className="w-7 h-7 text-red-600 hover:text-red-800" />
-                ) : (
+              {isAdded ? (
+                <div className="mt-4 flex items-center gap-2">
+                  <div className="w-7 h-7 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                    {orderNumber}
+                  </div>
+                  <button
+                    onClick={() => toggleItem(itemName)}
+                    className="transition-all"
+                    title="Remove from learning"
+                  >
+                    <Trash2 className="w-6 h-6 text-red-600 hover:text-red-800" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => toggleItem(itemName)}
+                  className="mt-4 transition-all"
+                  title="Add to learning"
+                >
                   <Plus className="w-7 h-7 text-blue-600 hover:text-blue-800" />
-                )}
-              </button>
+                </button>
+              )}
             </div>
           );
         })}
