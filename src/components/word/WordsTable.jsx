@@ -17,8 +17,10 @@ export default function WordsTable({
 }) {
   const [addedItems, setAddedItems] = useState(new Map());
   const [orderCounter, setOrderCounter] = useState(1);
-  const [visibleCount, setVisibleCount] = useState(30);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const itemsPerPage = 50;
 
   // טוען מה-localStorage
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function WordsTable({
   const resetSelection = () => {
     setAddedItems(new Map());
     setOrderCounter(1);
+    setCurrentPage(1); // איפוס לעמוד הראשון
     localStorage.removeItem("learnedWords");
   };
 
@@ -85,11 +88,18 @@ export default function WordsTable({
     return aEn.localeCompare(bEn);
   });
 
-  // המילים הנראות (לפי visibleCount)
-  const filteredWords = sortedWords.slice(0, visibleCount);
+  // המילים הנראות (לפי pagination)
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const filteredWords = sortedWords.slice(startIndex, endIndex);
   
-  // האם יש עוד מילים להציג
-  const hasMoreWords = visibleCount < sortedWords.length;
+  // חישוב pagination
+  const totalWords = sortedWords.length;
+  const totalPages = Math.ceil(totalWords / itemsPerPage);
+  const showingStart = startIndex + 1;
+  const showingEnd = Math.min(endIndex, totalWords);
+  
+  console.log('Debug Pagination:', { currentPage, totalPages, totalWords, showingStart, showingEnd });
 
   return (
     <div className="relative overflow-hidden max-w-7xl mx-auto mt-8 p-6 rounded-3xl border border-gray-200 shadow-2xl bg-gradient-to-br from-blue-50 via-white to-pink-50">
@@ -177,17 +187,86 @@ export default function WordsTable({
         })}
       </div>
 
-      {/* Load more - תוקן */}
-      {hasMoreWords && (
-        <div className="mt-8 flex justify-center">
-          <span
-            onClick={() => setVisibleCount(prev => prev + 30)}
-            className="px-6 py-2 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 font-bold shadow-md cursor-pointer"
-          >
-            Load More ({filteredWords.length}/{sortedWords.length})
-          </span>
-        </div>
-      )}
+      {/* Pagination */}
+      <div className="mt-8 mb-20 flex flex-col items-center relative z-50">
+        <p className="text-sm text-gray-600 mb-4">
+          Showing {showingStart}-{showingEnd} of {totalWords} words
+        </p>
+        
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            {/* Previous button */}
+            <button
+              type="button"
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: currentPage === 1 ? '#9ca3af' : '#374151',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              Previous
+            </button>
+
+            {/* Page numbers */}
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  onClick={() => setCurrentPage(pageNum)}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: currentPage === pageNum ? '#ef4444' : '#f3f4f6',
+                    color: currentPage === pageNum ? 'white' : '#374151',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    minWidth: '40px'
+                  }}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {/* Next button */}
+            <button
+              type="button"
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: currentPage === totalPages ? '#9ca3af' : '#374151',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
 
       <NavBar navLinks={navLinks} />
     </div>

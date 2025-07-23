@@ -46,6 +46,17 @@ const NavigationCards = () => {
       hoverFrom: "hover:from-yellow-600",
       hoverTo: "hover:to-yellow-800",
       textColor: "text-yellow-100"
+    },
+    {
+      name: "Popular Words",
+      path: "/words",
+      emoji: "📚",
+      description: "Enhance your auditory recognition skills.",
+      gradientFrom: "from-orange-500",
+      gradientTo: "to-orange-700",
+      hoverFrom: "hover:from-orange-600",
+      hoverTo: "hover:to-orange-800",
+      textColor: "text-orange-100"
     }    
   ];
 
