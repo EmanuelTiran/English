@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
-import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import NavBar from "./NavBar";
 
 const speakWord = (word) => {
   const utter = new SpeechSynthesisUtterance(word);
@@ -14,7 +14,8 @@ export default function ItemTable({
   title = "What items will we learn about today?",
   iconField = "icon",
   nameField = "name",
-  onAddToLearn = () => {},
+  onAddToLearn = () => { },
+  onRemoveFromLearn = () => { }, // פונקציה חדשה למחיקה מה-existingItems
   navLinks = [],
   existingItems = [], // רשימת הפריטים שכבר נבחרו
 }) {
@@ -40,6 +41,9 @@ export default function ItemTable({
       });
       setAddedItems(updatedMap);
       setOrderCounter(updatedMap.size + 1);
+
+      // קריאה לפונקציה למחיקה מה-existingItems
+      onRemoveFromLearn(itemName);
     } else {
       newMap.set(itemName, orderCounter);
       setAddedItems(newMap);
@@ -72,11 +76,10 @@ export default function ItemTable({
           return (
             <div
               key={itemName}
-              className={`group relative flex flex-col items-center justify-center rounded-2xl p-6 border transition duration-300 transform hover:scale-[1.05] hover:rotate-[1deg] shadow-xl ${
-                isAdded
+              className={`group relative flex flex-col items-center justify-center rounded-2xl p-6 border transition duration-300 transform hover:scale-[1.05] hover:rotate-[1deg] shadow-xl ${isAdded
                   ? "bg-gradient-to-br from-green-200 to-green-100 border-green-300"
                   : "bg-gradient-to-br from-blue-100 to-blue-50 border-blue-200"
-              } hover:shadow-2xl hover:shadow-purple-200 backdrop-blur-md`}
+                } hover:shadow-2xl hover:shadow-purple-200 backdrop-blur-md`}
             >
               {isAdded && (
                 <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md z-20">
@@ -123,21 +126,8 @@ export default function ItemTable({
         })}
       </div>
 
-      {navLinks.length > 0 && (
-        <nav className="mt-10 relative z-10 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
-              end
-            >
-              <span className="text-lg">{link.icon}</span>
-              <span className="text-lg">{link.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-      )}
+      <NavBar navLinks={navLinks} />
+
     </div>
   );
 }

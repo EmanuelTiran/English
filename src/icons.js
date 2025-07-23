@@ -106,9 +106,27 @@ export  const animalIcons = {
     "Bat": "🦇"
   };
 
+  export const colorIcons = {
+    "Red": "❤️",
+  "Blue": "💙",
+  "Green": "💚",
+  "Yellow": "💛",
+  "Orange": "🧡",
+  "Purple": "💜",
+  "Black": "🖤",
+  "White": "🤍",
+  "Brown": "🤎",
+  "Pink":"🌺",
+  "Gold": "💰",
+  "LightBlue": "🌐",
+  "Silver": "🥈",
+  "Gray": "🗻🌑"
+  };
+
   export  const itemIcons = {
     ...foodIcons,
-    ...animalIcons
+    ...animalIcons,
+    ...colorIcons
 };
   export const animals = [
     { name: "Dog", icon: "🐶" },
@@ -218,6 +236,26 @@ export  const animalIcons = {
     { name: "Pancake", icon: "🥞" },
     { name: "Sausage", icon: "🌭" }, // Reusing hot dog icon for sausage
 ];
+
+export const colorsItem = [
+  { name: "Red", icon: "❤️" },
+  { name: "Orange", icon: "🧡" },
+  { name: "Yellow", icon: "💛" },
+  { name: "Green", icon: "💚" },
+  { name: "LightBlue", icon: "🌐" },
+  { name: "Blue", icon: "💙" },
+  { name: "Purple", icon: "💜" },
+  { name: "Brown", icon: "🤎" },
+  { name: "White", icon: "🤍" },
+  { name: "Black", icon: "🖤" },
+  { name: "Pink", icon: "🌺" },
+  { name: "Gold", icon: "💰" },
+  { name: "Silver", icon: "🥈" },
+  { name: "Gray", icon: "🗻🌑" },
+
+
+
+]
 
 export const defaultSentences = [
   "Hello, how are you today?",

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import NavBar from "./NavBar";
 
 const defaultAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -17,7 +18,7 @@ const playClickSound = () => {
   audio.play();
 };
 
-export default function ItemSlider({ items = [], itemIcons = {}, letters = false }) {
+export default function ItemSlider({ items = [], itemIcons = {}, letters = false, navLinks = [] }) {
   const isLettersMode = letters || items.length === 0;
   const content = isLettersMode ? defaultAlphabet : items;
 
@@ -134,6 +135,9 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
           <ChevronRight size={38} />
         </motion.button>
       </div>
+
+      <NavBar navLinks={navLinks} />
+
     </div>
   );
 }

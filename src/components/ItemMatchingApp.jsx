@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
 import { itemIcons } from '../icons'; // נתיב יחסי לקובץ icons.js
+import NavBar from './NavBar';
 
 // ✅ פונקציית צלילים
 const playSound = (type) => {
@@ -13,7 +14,7 @@ const playSound = (type) => {
   audio.play();
 };
 
-const ItemMatchingApp = ({ items }) => {
+const ItemMatchingApp = ({ items ,navLinks}) => {
   const getRandomItem = (completedSet) => {
     const available = items.filter(i => !completedSet.has(i));
     return available.length === 0 ? null : available[Math.floor(Math.random() * available.length)];
@@ -108,7 +109,11 @@ const ItemMatchingApp = ({ items }) => {
   const progress = (completedItems.size / items.length) * 100;
 
   if (!items || items.length === 0) {
-    return <div className="text-center p-10 text-red-600 font-bold">❗ No items provided</div>;
+    return<>
+    <div className="text-center p-10 text-red-600 font-bold">❗ No items provided</div>;
+    <NavBar navLinks={navLinks} />
+
+    </>
   }
 
   if (gameComplete) {
@@ -132,7 +137,7 @@ const ItemMatchingApp = ({ items }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-xl w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">Item Matching Game</h1>
@@ -212,6 +217,9 @@ const ItemMatchingApp = ({ items }) => {
           </div>
         )}
       </div>
+      <NavBar navLinks={navLinks} />
+
+
     </div>
   );
 };
