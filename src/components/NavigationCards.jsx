@@ -36,6 +36,17 @@ const NavigationCards = () => {
       hoverTo: 'hover:to-blue-800',
       textColor: 'text-blue-100'
     },
+    {
+      name: "Story",
+      path: "/navStory",
+      emoji: "📚",
+      description: "Enhance your auditory recognition skills.",
+      gradientFrom: "from-yellow-500",
+      gradientTo: "to-yellow-700",
+      hoverFrom: "hover:from-yellow-600",
+      hoverTo: "hover:to-yellow-800",
+      textColor: "text-yellow-100"
+    }    
   ];
 
   return (

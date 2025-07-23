@@ -16,7 +16,7 @@ function HomePage() {
       <div className="bg-black bg-opacity-50 p-6 rounded-xl max-w-3xl">
         {!showNavigation ? (
           <h1
-            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold cursor-pointer"
+            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold cursor-pointer "
             onClick={handleTitleClick}
           >
             Welcome to Fun English!

@@ -15,6 +15,7 @@ export const AppProvider = ({ children }) => {
   const [animalsToLearn, setAnimalsToLearn] = useState([]);
   const [foodToLearn, setFoodToLearn] = useState([]);
   const [colorToLearn, setColorToLearn] = useState([]);
+  const [wordToLearn, setWordToLearn] = useState([]);
 
   const addToLearn = (animal) => {
     if (animal !== undefined) {
@@ -41,26 +42,40 @@ export const AppProvider = ({ children }) => {
   };
 
   const addToLearnColor = (colorItem) => {
-    if (!colorToLearn.includes(colorItem)) {
+    if (!wordToLearn.includes(colorItem)) {
       setColorToLearn((prev) => [...prev, colorItem]);
     }
-    console.log(colorToLearn);
+    console.log(wordToLearn);
   };
 
   const removeColor = (itemName) => {
     setColorToLearn(prev => prev.filter(item => item !== itemName));
   };
 
+  const addToLearnWord = (word) => {
+    if (!wordToLearn.includes(word)) {
+      setWordToLearn((prev) => [...prev, word]);
+    }
+    console.log(wordToLearn);
+  };
+
+  const removeWord = (anyWord) => {
+    setWordToLearn(prev => prev.filter(word => word !== anyWord));
+  };
+
   const value = {
     animalsToLearn,
     foodToLearn,
     colorToLearn,
+    wordToLearn,
     addToLearn,
     removeAnimal,
     addToLearnFood,
     removeFood,
     addToLearnColor,
-    removeColor
+    removeColor,
+    removeWord,
+    addToLearnWord
   };
 
   return (

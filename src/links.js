@@ -10,6 +10,10 @@ export const linksToFoodForTable = [
     { to: "/color2", icon: "📚", label: "My English Color Vocabulary" },
     { to: "/color3", icon: "🎯", label: "Matching Color Game" },
   ];
+  export const linksToWordsForTable = [
+    { to: "/color2", icon: "📚", label: "My English Color Vocabulary" },
+    { to: "/color3", icon: "🎯", label: "Matching Color Game" },
+  ];
   
   
   
