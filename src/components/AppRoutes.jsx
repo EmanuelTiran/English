@@ -19,6 +19,8 @@ import { linksToAnimalForTable, linksToColorsForTable, linksToFoodForTable,
     linksToAnimalForSlider,linksToColorsForSlider, linksToFoodForSlider,
     linksToAnimalForGame,linksToColorsForGame,linksToFoodForGame
 } from '../links';
+import StoryTranslator from './StoryTranslator';
+import CustomStoryBuilder from './CustomStoryBuilder';
 
 export const AppRoutes = () => {
     const {
@@ -87,6 +89,8 @@ export const AppRoutes = () => {
         <Route path="/123" element={<HebrewEnglishTranslator />} />
         <Route path="/body" element={<HumanBody />} />
         <Route path="/Hearing" element={<Hearing />} />
+        <Route path="/story" element={<StoryTranslator  />} />
+        <Route path="/myStory" element={<CustomStoryBuilder  />} />
         <Route path="*" element={<h2 className="text-red-500 text-2xl">404 - Page Not Found</h2>} />
       </Routes>
     );
