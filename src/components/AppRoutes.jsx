@@ -21,7 +21,7 @@ import {
   linksToAnimalForTable, linksToColorsForTable, linksToFoodForTable,
   linksToAnimalForSlider, linksToColorsForSlider, linksToFoodForSlider,
   linksToAnimalForGame, linksToColorsForGame, linksToFoodForGame,
-  linksToWordsForTable
+  linksToWordsForTable , linksToWordsForSlider,linksToWordsForGame
 } from '../links';
 import StoryTranslator from './StoryTranslator';
 import CustomStoryBuilder from './CustomStoryBuilder';
@@ -104,8 +104,8 @@ export const AppRoutes = () => {
         onRemoveFromLearn={removeWord}
         existingItems={wordToLearn}
         navLinks={linksToWordsForTable} />} />
-      <Route path="/words2" element={<WordsSlider />} />
-      <Route path="/words3" element={<WordsGame />} />
+      <Route path="/words2" element={<WordsSlider  navLinks={linksToWordsForSlider} />} />
+      <Route path="/words3" element={<WordsGame navLinks={linksToWordsForGame}/>} />
 
       <Route path="/navStory" element={<NavStory />} />
       <Route path="/story" element={<StoryTranslator />} />

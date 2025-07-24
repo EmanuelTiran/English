@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Button from './Button';
+import Button from './word/Button';
 import Input from './Input1';
 import Textarea from './Textarea';
 
