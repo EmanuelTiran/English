@@ -9,6 +9,7 @@ const StoryTranslator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speechRate, setSpeechRate] = useState(1.0); // קצב דיבור רגיל
   const synthRef = useRef(window.speechSynthesis);
 
   // טוען את הסיפור לפי האינדקס
@@ -36,6 +37,7 @@ const StoryTranslator = () => {
     setError('');
   };
 
+  // פונקציה מעודכנת להשמעת טקסט עם קצב משתנה
   const speakText = (text) => {
     if (synthRef.current.speaking) {
       synthRef.current.cancel();
@@ -43,10 +45,38 @@ const StoryTranslator = () => {
     } else {
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = 'en-US';
+      utter.rate = speechRate; // הגדרת קצב הדיבור
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
+      
       synthRef.current.speak(utter);
       setIsSpeaking(true);
+      
       utter.onend = () => setIsSpeaking(false);
+      utter.onerror = () => setIsSpeaking(false);
     }
+  };
+
+  // פונקציות לשינוי קצב הדיבור
+  const increaseSpeechRate = () => {
+    setSpeechRate(prev => Math.min(prev + 0.25, 2.0));
+  };
+
+  const decreaseSpeechRate = () => {
+    setSpeechRate(prev => Math.max(prev - 0.25, 0.5));
+  };
+
+  const resetSpeechRate = () => {
+    setSpeechRate(1.0);
+  };
+
+  // קבלת תיאור קצב הדיבור
+  const getSpeechRateDescription = () => {
+    if (speechRate <= 0.75) return 'איטי מאוד';
+    if (speechRate <= 1.0) return 'איטי';
+    if (speechRate <= 1.25) return 'רגיל';
+    if (speechRate <= 1.5) return 'מהיר';
+    return 'מהיר מאוד';
   };
 
   const handleWordClick = (word) => {
@@ -123,6 +153,70 @@ const StoryTranslator = () => {
           >
             סיפור הבא ➡️
           </button>
+        </div>
+
+        {/* בקרת קצב דיבור */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h3 className="text-xl font-semibold mb-4 text-gray-700 text-center">
+            🎵 שליטה בקצב הדיבור
+          </h3>
+          
+          <div className="flex flex-col items-center space-y-4">
+            {/* כפתורי מהירות */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={decreaseSpeechRate}
+                disabled={speechRate <= 0.5}
+                className="bg-orange-400 hover:bg-orange-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded shadow font-bold"
+              >
+                🐌 האט
+              </button>
+              
+              <div className="text-center min-w-32">
+                <div className="text-lg font-semibold text-gray-700">
+                  {speechRate.toFixed(2)}x
+                </div>
+                <div className="text-sm text-gray-500">
+                  {getSpeechRateDescription()}
+                </div>
+              </div>
+              
+              <button
+                onClick={increaseSpeechRate}
+                disabled={speechRate >= 2.0}
+                className="bg-green-400 hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded shadow font-bold"
+              >
+                🚀 האץ
+              </button>
+            </div>
+
+            {/* סליידר */}
+            <div className="w-full max-w-md">
+              <input
+                type="range"
+                min="0.5"
+                max="2.0"
+                step="0.25"
+                value={speechRate}
+                onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0.5x</span>
+                <span>1.0x</span>
+                <span>1.5x</span>
+                <span>2.0x</span>
+              </div>
+            </div>
+
+            {/* כפתור איפוס */}
+            <button
+              onClick={resetSpeechRate}
+              className="bg-gray-400 hover:bg-gray-500 text-white px-3 py-1 rounded text-sm"
+            >
+              🔄 איפוס לקצב רגיל
+            </button>
+          </div>
         </div>
 
         {/* סיפור וכפתור השמעה */}
@@ -202,7 +296,10 @@ const StoryTranslator = () => {
           <p className="text-gray-600 text-sm mb-2">
             💡 לחץ על כל מילה בכותרת או בסיפור כדי לקבל תרגום באמצעות API חיצוני
           </p>
-          <p className="text-gray-500 text-xs">משתמש ב-MyMemory Translation API</p>
+          <p className="text-gray-500 text-xs mb-2">משתמש ב-MyMemory Translation API</p>
+          <p className="text-gray-500 text-xs">
+            🎵 השתמש בבקרות המהירות כדי להתאים את קצב הדיבור לצרכים שלך
+          </p>
         </div>
       </div>
     </div>
