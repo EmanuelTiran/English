@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Volume2, RotateCcw, Star, Trophy, Play, VolumeX } from 'lucide-react';
 import { defaultSentences } from '../icons';
 
-// ✅ פונקציית צלילים
 const playSound = (type) => {
     const sounds = {
         correct: "/sounds/correct.mp3",
@@ -18,25 +17,20 @@ const playSound = (type) => {
 };
 
 function selectRandomSentences(sentencesArray, numberOfSentences = 10) {
-    // יוצרים עותק של המערך כדי לא לשנות את המערך המקורי
     const shuffled = [...sentencesArray];
     let currentIndex = shuffled.length;
     let randomIndex;
 
-    // While there remain elements to shuffle.
     while (currentIndex !== 0) {
-        // Pick a remaining element.
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
 
-        // And swap it with the current element.
         [shuffled[currentIndex], shuffled[randomIndex]] = [
             shuffled[randomIndex],
             shuffled[currentIndex],
         ];
     }
 
-    // מחזירים את 10 המשפטים הראשונים (לאחר הערבוב, הם אקראיים)
     return shuffled.slice(0, numberOfSentences);
 }
 

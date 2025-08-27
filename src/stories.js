@@ -4,6 +4,34 @@ export const stories = [
         text: "In a little district west of Washington Square the streets have run crazy and broken themselves into small strips called 'places.' These 'places' make strange angles and curves. One street crosses itself a time or two. An artist once discovered a valuable possibility in this street. Suppose a collector with a bill for paints, or a landlord who was collecting rent, should come along for the right address, he would never leave that labyrinth without being financially ruined. This was a story about an old artist who lived in the same building as two young female artists. One of the young women fell ill with pneumonia, and the doctor gave her little hope of recovery. She became convinced she would die when the last leaf fell from the ivy vine outside her window. The old artist, hearing this, secretly painted a leaf on the wall after the real leaves had all fallen, giving her hope and helping her recover. He, however, caught pneumonia himself while painting in the cold and died.",
     },
     {
+        title: "The Tortoise and the Hare",
+        text: "A boastful hare challenges a slow tortoise to a race. The hare, confident in his speed, gets far ahead and decides to take a nap. The tortoise, moving slowly but steadily, passes the sleeping hare and wins the race, teaching a lesson about patience ועבודה מתמדת."
+    },
+    {
+        title: "The Lion and the Mouse",
+        text: "A little mouse accidentally wakes a sleeping lion. The lion decides to let the mouse go, laughing at the mouse's promise to repay the favor one day. Later, the lion gets caught in a hunter's net. The mouse, hearing his roars, chews through the ropes and frees him, proving that even small friends can be powerful."
+    },
+    {
+        title: "The Boy Who Cried Wolf",
+        text: "A bored shepherd boy repeatedly tricks the villagers into thinking a wolf is attacking his sheep. When a real wolf appears, the boy cries for help, but the villagers, who have been fooled before, ignore his pleas. The wolf attacks the flock, and the boy learns a harsh lesson about honesty."
+    },
+    {
+        title: "The Thirsty Crow",
+        text: "A thirsty crow finds a pitcher with a small amount of water at the bottom, too low for her beak to reach. Thinking creatively, she begins dropping small pebbles into the pitcher. The water level slowly rises until she can finally drink, showing that גם אם יש קושי אפשר להתגבר בעזרת חשיבה."
+    },
+    {
+        title: "The Ant and the Grasshopper",
+        text: "During the summer, a hard-working ant collects food while a lazy grasshopper spends his days singing and playing. When winter arrives, the ant has a full store of food, while the grasshopper is cold and starving. The ant refuses to share his food, teaching the grasshopper the importance of תכנון ועבודה קשה."
+    },
+    {
+        title: "The Ant and the Grasshopper",
+        text: "In a field one summer's day a Grasshopper was hopping about, chirping and singing to its heart's content. An Ant passed by, toiling along with a heavy ear of corn that he was taking to the nest. The Grasshopper invited him to stop and chat, but the Ant replied that he was gathering food for the winter. The Grasshopper just laughed. When winter came, the Grasshopper found himself starving, while the Ant and his family had plenty of food."
+    },
+    {
+        title: "The Fox and the Grapes",
+        text: "A hungry fox sees a beautiful bunch of grapes hanging from a vine and tries to reach them. No matter how hard he tries, he can't get to them. Finally, giving up, he mutters to himself, 'I am sure those grapes are sour anyway,' and walks away, pretending he didn't want them. The story teaches us that it is easy to despise what you cannot have."
+    },
+    {
         title: "The Gift of the Magi",
         text: "One dollar and eighty-seven cents. That was all. And sixty cents of it was in pennies. Pennies saved one and two at a time by bulldozing the grocer and the vegetable man and the butcher until one's cheeks burned with the silent imputation of parsimony that such close dealing implied. Three times Della counted it. One dollar and eighty-seven cents. And the next day would be Christmas. This is a story about a young couple, Della and Jim, who are very poor but deeply in love. On Christmas Eve, they each want to buy a special gift for the other. Della sells her most prized possession, her long, beautiful hair, to buy a platinum fob chain for Jim's prized gold watch. Jim, in turn, sells his watch to buy a set of ornate combs for Della's hair. They realize that their gifts, while now useless in their intended purpose, truly represent the immense love and sacrifice they made for each other, which is the greatest gift of all.",
     },
