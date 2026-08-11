@@ -89,6 +89,15 @@ export default function ItemTable({
 
               <div
                 onClick={() => speakWord(itemName)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  // FIXED: keyboard users can trigger speech with Enter or Space.
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    speakWord(itemName);
+                  }
+                }}
                 className="text-6xl mb-3 cursor-pointer hover:scale-110 transition-transform"
                 title="Click to speak"
               >

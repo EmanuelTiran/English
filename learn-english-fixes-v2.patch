@@ -1,0 +1,853 @@
+diff --git a/package.json b/package.json
+index d4aad34..71418ba 100644
+--- a/package.json
++++ b/package.json
+@@ -4,7 +4,6 @@
+   "private": true,
+   "dependencies": {
+     "@heroicons/react": "^2.2.0",
+-    "@shadcn/ui": "^0.0.4",
+     "@testing-library/dom": "^10.4.0",
+     "@testing-library/jest-dom": "^6.6.3",
+     "@testing-library/react": "^16.3.0",
+diff --git a/src/components/AppRoutes.jsx b/src/components/AppRoutes.jsx
+index 844b63f..223c0e9 100644
+--- a/src/components/AppRoutes.jsx
++++ b/src/components/AppRoutes.jsx
+@@ -10,7 +10,6 @@ import ItemSlider from "./ItemSlider";
+ import ItemTable from "./ItemTable";
+ import Items from "./Items";
+ import LetterKeyboard from "./LetterKeyboard";
+-import LetterMatchingApp from "./LetterMatchingApp ";
+ import LettersHome from "./LettersHome";
+ import HumanBody from "./item/body/HumanBody";
+ import { useAppContext } from "./useAppContext";
+@@ -21,7 +20,8 @@ import {
+   linksToAnimalForTable, linksToColorsForTable, linksToFoodForTable,
+   linksToAnimalForSlider, linksToColorsForSlider, linksToFoodForSlider,
+   linksToAnimalForGame, linksToColorsForGame, linksToFoodForGame,
+-  linksToWordsForTable , linksToWordsForSlider,linksToWordsForGame
++  linksToWordsForTable, linksToWordsForSlider, linksToWordsForGame,
++  linksToLettersForGame
+ } from '../links';
+ import StoryTranslator from './StoryTranslator';
+ import CustomStoryBuilder from './CustomStoryBuilder';
+@@ -29,6 +29,14 @@ import WordsTable from './word/WordsTable.jsx';
+ import WordsGame from './word/WordsGame.jsx';
+ import WordsSlider from './word/WordsSlider.jsx';
+ 
++const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
++const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz'.split('');
++const allLetters = [...upperCaseLetters, ...lowerCaseLetters];
++const getMatchingLetter = (letter) =>
++  letter === letter.toUpperCase() ? letter.toLowerCase() : letter.toUpperCase();
++const getOppositeCaseLetters = (letter) =>
++  letter === letter.toUpperCase() ? lowerCaseLetters : upperCaseLetters;
++
+ export const AppRoutes = () => {
+   const {
+     animalsToLearn,
+@@ -53,7 +61,19 @@ export const AppRoutes = () => {
+       <Route path="/Letters" element={<LettersHome />} />
+       <Route path="/Letters2" element={<LetterKeyboard />} />
+       <Route path="/Letters3" element={<ItemSlider letters={true} />} />
+-      <Route path="/Letters1" element={<LetterMatchingApp />} />
++      {/* FIXED: the letter game now reuses ItemMatchingApp while preserving upper/lower-case matching. */}
++      <Route path="/Letters1" element={<MatchingGame
++        items={allLetters}
++        navLinks={linksToLettersForGame}
++        getCorrectOption={getMatchingLetter}
++        getOptionPool={getOppositeCaseLetters}
++        renderCurrentItem={(letter) => letter}
++        title="Letter Matching Game"
++        prompt="Which letter matches?"
++        completionTitle="All letters matched!"
++        progressLabel="letters"
++        optionClassName="text-4xl"
++      />} />
+ 
+       <Route path="/Items" element={<Items />} />
+ 
+diff --git a/src/components/ItemMatchingApp.jsx b/src/components/ItemMatchingApp.jsx
+index 7cdf75f..c13b705 100644
+--- a/src/components/ItemMatchingApp.jsx
++++ b/src/components/ItemMatchingApp.jsx
+@@ -14,7 +14,20 @@ const playSound = (type) => {
+   audio.play();
+ };
+ 
+-const ItemMatchingApp = ({ items ,navLinks}) => {
++const ItemMatchingApp = ({
++  items = [],
++  navLinks = [],
++  iconMap = itemIcons,
++  getCorrectOption = (item) => item,
++  getOptionPool = () => items,
++  renderCurrentItem,
++  title = 'Item Matching Game',
++  prompt = 'Which item is this?',
++  completionTitle = 'All items matched!',
++  progressLabel = 'items',
++  optionClassName = 'text-xl',
++}) => {
++  // FIXED: configurable matching rules let letters reuse this generic game without changing item behavior.
+   const getRandomItem = (completedSet) => {
+     const available = items.filter(i => !completedSet.has(i));
+     return available.length === 0 ? null : available[Math.floor(Math.random() * available.length)];
+@@ -54,8 +67,9 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+   }, []);
+ 
+   function generateOptions(correct) {
+-    const options = [correct];
+-    const others = items.filter(i => i !== correct);
++    const correctOption = getCorrectOption(correct);
++    const options = [correctOption];
++    const others = getOptionPool(correct).filter(i => i !== correctOption);
+     while (options.length < 4 && others.length > 0) {
+       const rand = others[Math.floor(Math.random() * others.length)];
+       if (!options.includes(rand)) options.push(rand);
+@@ -64,7 +78,8 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+   }
+ 
+   const handleAnswer = (selected) => {
+-    const isCorrect = selected === currentItem;
++    const correctOption = getCorrectOption(currentItem);
++    const isCorrect = selected === correctOption;
+     setTotalQuestions(prev => prev + 1);
+ 
+     if (isCorrect) {
+@@ -122,7 +137,7 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+         <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-md w-full">
+           <div className="text-6xl mb-4">🎉</div>
+           <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+-          <h2 className="text-3xl font-bold text-gray-800 mb-4">All items matched!</h2>
++          <h2 className="text-3xl font-bold text-gray-800 mb-4">{completionTitle}</h2>
+           <p className="text-lg text-gray-600 mb-2">Score: {score}/{totalQuestions}</p>
+           <button
+             onClick={resetGame}
+@@ -140,7 +155,7 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+     <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex flex-col items-center justify-center p-4">
+       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-xl w-full">
+         <div className="text-center mb-8">
+-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Item Matching Game</h1>
++          <h1 className="text-3xl font-bold text-gray-800 mb-4">{title}</h1>
+           <div className="flex justify-between items-center mb-4">
+             <div className="flex items-center gap-2">
+               <Star className="text-yellow-500 w-5 h-5" />
+@@ -161,13 +176,15 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+               style={{ width: `${progress}%` }}
+             ></div>
+           </div>
+-          <p className="text-sm text-gray-600">Progress: {completedItems.size}/{items.length} items</p>
++          <p className="text-sm text-gray-600">Progress: {completedItems.size}/{items.length} {progressLabel}</p>
+         </div>
+ 
+         <div className="text-center mb-8">
+-          <h2 className="text-2xl text-gray-700 mb-4">Which item is this?</h2>
++          <h2 className="text-2xl text-gray-700 mb-4">{prompt}</h2>
+           <div className="relative">
+-            <div className="text-8xl mb-4 animate-pulse">{itemIcons[currentItem] || "❓"}</div>
++            <div className="text-8xl mb-4 animate-pulse">
++              {renderCurrentItem ? renderCurrentItem(currentItem) : iconMap[currentItem] || "❓"}
++            </div>
+             <button
+               onClick={() => speakItem(currentItem)}
+               className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full"
+@@ -185,12 +202,12 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+               onClick={() => handleAnswer(name)}
+               disabled={showFeedback !== ''}
+               className={`
+-                text-xl font-bold py-6 px-4 rounded-xl border-4 transition-all duration-200
++                ${optionClassName} font-bold py-6 px-4 rounded-xl border-4 transition-all duration-200
+                 ${showFeedback === ''
+                   ? 'bg-gray-50 border-gray-300 hover:border-blue-400 hover:bg-blue-50 active:scale-95'
+                   : 'opacity-50 cursor-not-allowed'}
+-                ${showFeedback === 'correct' && name === currentItem ? 'bg-green-100 border-green-400 text-green-700' : ''}
+-                ${showFeedback === 'incorrect' && name === currentItem ? 'bg-green-100 border-green-400 text-green-700' : ''}
++                ${showFeedback === 'correct' && name === getCorrectOption(currentItem) ? 'bg-green-100 border-green-400 text-green-700' : ''}
++                ${showFeedback === 'incorrect' && name === getCorrectOption(currentItem) ? 'bg-green-100 border-green-400 text-green-700' : ''}
+               `}
+             >
+               {name}
+@@ -211,7 +228,7 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
+             </p>
+             {showFeedback === 'incorrect' && (
+               <p className="text-sm text-gray-600 mt-2">
+-                The correct answer was: <span className="font-bold text-lg">{currentItem}</span>
++                The correct answer was: <span className="font-bold text-lg">{getCorrectOption(currentItem)}</span>
+               </p>
+             )}
+           </div>
+diff --git a/src/components/ItemSlider.jsx b/src/components/ItemSlider.jsx
+index 1104b3e..0c8a5cf 100644
+--- a/src/components/ItemSlider.jsx
++++ b/src/components/ItemSlider.jsx
+@@ -19,7 +19,8 @@ const playClickSound = () => {
+ };
+ 
+ export default function ItemSlider({ items = [], itemIcons = {}, letters = false, navLinks = [] }) {
+-  const isLettersMode = letters || items.length === 0;
++  // FIXED: an empty item list is not alphabet mode; only the explicit letters prop enables it.
++  const isLettersMode = letters;
+   const content = isLettersMode ? defaultAlphabet : items;
+ 
+   const [index, setIndex] = useState(0);
+@@ -40,7 +41,7 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
+   };
+ 
+   useEffect(() => {
+-    speakText(current);
++    if (current) speakText(current);
+   }, [current]);
+ 
+   useEffect(() => {
+@@ -52,6 +53,18 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
+     return () => window.removeEventListener("keydown", handleKey);
+   }, []);
+ 
++  if (content.length === 0) {
++    return (
++      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-yellow-100 py-12 px-4 text-center">
++        <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl p-6">
++          <h2 className="text-2xl font-bold text-red-500">No items to learn yet 😕</h2>
++          <p className="text-gray-600 mt-2">Please add items before opening the learning slider.</p>
++        </div>
++        <NavBar navLinks={navLinks} />
++      </div>
++    );
++  }
++
+   const variants = {
+     enter: (direction) => ({
+       x: direction > 0 ? 300 : -300,
+diff --git a/src/components/ItemTable.jsx b/src/components/ItemTable.jsx
+index 3c098e6..7b832eb 100644
+--- a/src/components/ItemTable.jsx
++++ b/src/components/ItemTable.jsx
+@@ -89,6 +89,15 @@ export default function ItemTable({
+ 
+               <div
+                 onClick={() => speakWord(itemName)}
++                role="button"
++                tabIndex={0}
++                onKeyDown={(event) => {
++                  // FIXED: keyboard users can trigger speech with Enter or Space.
++                  if (event.key === 'Enter' || event.key === ' ') {
++                    event.preventDefault();
++                    speakWord(itemName);
++                  }
++                }}
+                 className="text-6xl mb-3 cursor-pointer hover:scale-110 transition-transform"
+                 title="Click to speak"
+               >
+diff --git a/src/components/LetterMatchingApp .jsx b/src/components/LetterMatchingApp.jsx
+similarity index 94%
+rename from src/components/LetterMatchingApp .jsx
+rename to src/components/LetterMatchingApp.jsx
+index 43c0b2e..a5335da 100644
+--- a/src/components/LetterMatchingApp .jsx	
++++ b/src/components/LetterMatchingApp.jsx
+@@ -1,5 +1,7 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the configurable ItemMatchingApp for letter matching.
+ import React, { useState, useEffect } from 'react';
+ import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
++import NavBar from './NavBar';
+ 
+ // ✅ אפקטים קוליים
+ const playSound = (type) => {
+@@ -12,7 +14,8 @@ const playSound = (type) => {
+   audio.play();
+ };
+ 
+-const LetterMatchingApp = () => {
++const LetterMatchingApp = ({ navLinks = [] }) => {
++  // FIXED: retain generic navigation support for any direct legacy usage.
+   const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+   const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+   const allLetters = [...upperCaseLetters, ...lowerCaseLetters];
+@@ -121,7 +124,7 @@ const LetterMatchingApp = () => {
+ 
+   if (gameComplete) {
+     return (
+-      <div className="min-h-screen flex items-center justify-center bg-green-200 p-6">
++      <div className="min-h-screen flex flex-col items-center justify-center bg-green-200 p-6">
+         <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-md w-full">
+           <div className="text-6xl mb-4">🎉</div>
+           <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+@@ -135,12 +138,13 @@ const LetterMatchingApp = () => {
+             Play Again
+           </button>
+         </div>
++        <NavBar navLinks={navLinks} />
+       </div>
+     );
+   }
+ 
+   return (
+-    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex items-center justify-center p-4">
++    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex flex-col items-center justify-center p-4">
+       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-xl w-full">
+         <div className="text-center mb-8">
+           <h1 className="text-3xl font-bold text-gray-800 mb-4">Letter Matching Game</h1>
+@@ -216,6 +220,7 @@ const LetterMatchingApp = () => {
+           </div>
+         )}
+       </div>
++      <NavBar navLinks={navLinks} />
+     </div>
+   );
+ };
+diff --git a/src/components/StoryTranslator.jsx b/src/components/StoryTranslator.jsx
+index 97e7216..05c666f 100644
+--- a/src/components/StoryTranslator.jsx
++++ b/src/components/StoryTranslator.jsx
+@@ -102,7 +102,22 @@ const StoryReaderApp = () => {
+         {/* לוגיקת הצגת הסיפורים או הסיפור הנבחר */}
+         {!selectedStory ? (
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+-            {/* כאן אמור לבוא המיפוי של stories.map במידה והוא מיובא כראוי */}
++            {/* FIXED: render every imported story as an accessible selection card. */}
++            {stories.map((story, index) => (
++              <button
++                key={`${story.title}-${index}`}
++                type="button"
++                onClick={() => setSelectedStory(story)}
++                className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow text-right border-2 border-transparent hover:border-purple-300"
++              >
++                <h2 className="text-2xl font-bold text-purple-800 mb-2">
++                  {story.title}
++                </h2>
++                <p className="text-gray-600 leading-relaxed">
++                  {story.text.slice(0, 160)}{story.text.length > 160 ? '…' : ''}
++                </p>
++              </button>
++            ))}
+           </div>
+         ) : (
+           <div className="bg-white p-8 rounded-lg shadow-xl">
+diff --git a/src/components/Textarea.jsx b/src/components/Textarea.jsx
+index 618c447..478b50f 100644
+--- a/src/components/Textarea.jsx
++++ b/src/components/Textarea.jsx
+@@ -1,13 +1,14 @@
+ import React from 'react';
+ 
+-const Textarea = ({ placeholder, value, onChange, className = '' }) => {
++const Textarea = ({ placeholder, value, onChange, rows = 4, className = '' }) => {
++  // FIXED: honor a caller-provided row count and keep 4 as the default.
+   return (
+     <textarea
+       placeholder={placeholder}
+       value={value}
+       onChange={onChange}
+       className={`w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${className}`}
+-      rows={4}
++      rows={rows}
+     />
+   );
+ };
+diff --git a/src/components/item/animal/AnimalMatchingApp.jsx b/src/components/item/animal/AnimalMatchingApp.jsx
+index 9d7e056..d69f673 100644
+--- a/src/components/item/animal/AnimalMatchingApp.jsx
++++ b/src/components/item/animal/AnimalMatchingApp.jsx
+@@ -1,3 +1,4 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemMatchingApp to avoid duplicate game logic.
+ import React, { useState, useEffect } from 'react';
+ import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
+ import { animalIcons } from '../../../icons'; // נתיב יחסי לקובץ icons.js
+diff --git a/src/components/item/animal/AnimalSlider.jsx b/src/components/item/animal/AnimalSlider.jsx
+index 37b6490..c777dec 100644
+--- a/src/components/item/animal/AnimalSlider.jsx
++++ b/src/components/item/animal/AnimalSlider.jsx
+@@ -1,8 +1,10 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemSlider to avoid duplicate slider logic.
+ import React, { useEffect, useState } from "react";
+ import { ChevronLeft, ChevronRight } from "lucide-react";
+ import { motion } from "framer-motion";
+-import { NavLink } from "react-router-dom";
+ import { animalIcons } from '../../../icons'; 
++import { linksToAnimalForSlider } from '../../../links';
++import NavBar from '../../NavBar';
+ 
+ 
+ 
+@@ -38,14 +40,8 @@ export default function AnimalSlider({ animals }) {
+           <h2 className="text-2xl font-bold text-red-500">No animals to learn yet 😕</h2>
+           <p className="text-gray-600 mt-2">Please add animals to start the learning slider.</p>
+ 
+-          <NavLink
+-                    to="/Animal1"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
+-
+-                    end
+-                >
+-                    <span className="text-lg">📚</span>
+-                    <span className="text-lg"> English Animal Vocabulary</span>        </NavLink>
++          {/* FIXED: use the shared navigation component and centralized animal links. */}
++          <NavBar navLinks={linksToAnimalForSlider} />
+         </div>
+       );
+     }
+@@ -93,24 +89,8 @@ export default function AnimalSlider({ animals }) {
+        
+       </div>
+ 
+-       <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
+-                <NavLink
+-                    to="/Animal2"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
+-
+-                    end
+-                >
+-                    <span className="text-lg">📚</span>
+-                    <span className="text-lg">My English Animal Vocabulary</span>        </NavLink>
+-                <NavLink
+-                    to="/Animal3"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
+-
+-                    end
+-                >
+-                    <span className="text-lg">🎯</span>
+-                    <span className="text-lg">Matching Animal Game</span>        </NavLink>
+-            </nav>
++       {/* FIXED: use the shared navigation component and centralized animal links. */}
++       <NavBar navLinks={linksToAnimalForSlider} />
+       </>
+     );
+   }
+diff --git a/src/components/item/animal/AnimalTable.jsx b/src/components/item/animal/AnimalTable.jsx
+index aafb3cf..fe477e7 100644
+--- a/src/components/item/animal/AnimalTable.jsx
++++ b/src/components/item/animal/AnimalTable.jsx
+@@ -1,9 +1,10 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemTable to avoid duplicate table logic.
+ import React, { useState } from "react";
+-import { SpeakerWaveIcon } from "@heroicons/react/24/solid";
+ import { Plus, CheckCircle } from "lucide-react";
+-import { NavLink } from "react-router-dom";
+ import { motion } from "framer-motion";
+ import { animals } from '../../../icons'; // נתיב יחסי לקובץ icons.js
++import { linksToAnimalForTable } from '../../../links';
++import NavBar from '../../NavBar';
+ 
+ 
+ 
+@@ -48,6 +49,15 @@ export default function AnimalTable({ onAddToLearn }) {
+                         >
+                             <div
+                                 onClick={() => speakWord(animal.name)}
++                                role="button"
++                                tabIndex={0}
++                                onKeyDown={(event) => {
++                                    // FIXED: keyboard users can trigger speech with Enter or Space.
++                                    if (event.key === 'Enter' || event.key === ' ') {
++                                        event.preventDefault();
++                                        speakWord(animal.name);
++                                    }
++                                }}
+                                 className="text-5xl mb-2"
+                                 title="Click to speak"
+                             >
+@@ -70,25 +80,8 @@ export default function AnimalTable({ onAddToLearn }) {
+                     );
+                 })}
+             </div>
+-            <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
+-                <NavLink
+-                    to="/Animal2"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
+-
+-                    end
+-                >
+-                    <span className="text-lg">📚</span>
+-                    <span className="text-lg">My English Animal Vocabulary</span>        </NavLink>
+-                <NavLink
+-                    to="/Animal3"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
+-
+-                    end
+-                >
+-                    <span className="text-lg">🎯</span>
+-                    <span className="text-lg">Matching Animal Game</span>
+-                </NavLink>
+-            </nav>
++            {/* FIXED: use the shared navigation component and centralized animal links. */}
++            <NavBar navLinks={linksToAnimalForTable} />
+         </div>
+     );
+ }
+diff --git a/src/components/item/body/HumanBody.jsx b/src/components/item/body/HumanBody.jsx
+index 0233984..247d501 100644
+--- a/src/components/item/body/HumanBody.jsx
++++ b/src/components/item/body/HumanBody.jsx
+@@ -1,5 +1,7 @@
+ import React, { useState } from 'react';
+ 
++// FIXED: InteractiveBody.css was removed because this component uses inline styles and none of that file's selectors.
++
+ const HumanBody = () => {
+   const [clickedPart, setClickedPart] = useState('');
+ 
+diff --git a/src/components/item/body/InteractiveBody.css b/src/components/item/body/InteractiveBody.css
+deleted file mode 100644
+index b0148ad..0000000
+--- a/src/components/item/body/InteractiveBody.css
++++ /dev/null
+@@ -1,114 +0,0 @@
+-/* InteractiveBody.css */
+-
+-/* Base Styles */
+-body {
+-    margin: 0;
+-    font-family: sans-serif;
+-    background-color: #bfdbfe; /* Tailwind: bg-blue-100 */
+-  }
+-  
+-  /* Layout and Container Styles */
+-  .interactive-body-container {
+-    display: flex;
+-    flex-direction: column;
+-    align-items: center;
+-    justify-content: center;
+-    min-height: 100vh;
+-  }
+-  
+-  .interactive-body-title {
+-    font-size: 2.5rem; /* Tailwind: text-4xl */
+-    font-weight: bold;
+-    margin-bottom: 1.5rem;
+-    text-align: center;
+-    color: #1d4ed8; /* Tailwind: text-blue-700 */
+-  }
+-  
+-  .body-wrapper {
+-    position: relative;
+-    width: 300px;
+-    height: 600px;
+-    background-color: white;
+-    border-radius: 1rem;
+-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+-    padding: 1rem;
+-  }
+-  
+-  /* Shared Body Part Styles */
+-  .body-part {
+-    position: absolute;
+-    cursor: pointer;
+-    border: 4px solid transparent;
+-    text-align: center;
+-    font-size: 0.75rem; /* Base font size for all parts */
+-    /* Add transition for smoother selection/hover effects if desired */
+-    transition: border-color 0.3s ease-in-out;
+-  }
+-  
+-  /* State-based Styles */
+-  .body-part.selected {
+-    border-color: #ef4444; /* Tailwind: border-red-500 */
+-  }
+-  
+-  /* Individual Body Part Styles */
+-  
+-  /* Head */
+-  .part-head {
+-    top: 1rem;
+-    left: 50%;
+-    transform: translateX(-50%);
+-    width: 6rem;
+-    height: 6rem;
+-    border-radius: 9999px; /* Fully rounded */
+-    background-color: #fde68a; /* Tailwind: bg-yellow-300 */
+-    padding-top: 2rem; /* Adjust padding for text inside */
+-    font-size: 1rem; /* Specific font size for head */
+-  }
+-  
+-  /* Torso */
+-  .part-torso {
+-    top: 8rem;
+-    left: 50%;
+-    transform: translateX(-50%);
+-    width: 7rem;
+-    height: 10rem;
+-    background-color: #86efac; /* Tailwind: bg-green-300 */
+-    padding-top: 4rem; /* Adjust padding for text inside */
+-    font-size: 1rem; /* Specific font size for torso */
+-  }
+-  
+-  /* Arms */
+-  .part-left-arm,
+-  .part-right-arm {
+-    top: 9rem;
+-    width: 2.5rem;
+-    height: 7rem;
+-    background-color: #f9a8d4; /* Tailwind: bg-pink-300 */
+-    padding-top: 2.5rem; /* Adjust padding for text inside */
+-  }
+-  
+-  .part-left-arm {
+-    left: 30px;
+-  }
+-  
+-  .part-right-arm {
+-    right: 30px;
+-  }
+-  
+-  /* Legs */
+-  .part-left-leg,
+-  .part-right-leg {
+-    bottom: 5rem;
+-    width: 2.5rem;
+-    height: 7rem;
+-    background-color: #d8b4fe; /* Tailwind: bg-purple-300 */
+-    padding-top: 2.5rem; /* Adjust padding for text inside */
+-  }
+-  
+-  .part-left-leg {
+-    left: 75px;
+-  }
+-  
+-  .part-right-leg {
+-    right: 75px;
+-  }
+diff --git a/src/components/item/foods/FoodMatchingApp .jsx b/src/components/item/foods/FoodMatchingApp.jsx
+similarity index 98%
+rename from src/components/item/foods/FoodMatchingApp .jsx
+rename to src/components/item/foods/FoodMatchingApp.jsx
+index 5ad551c..b189faf 100644
+--- a/src/components/item/foods/FoodMatchingApp .jsx	
++++ b/src/components/item/foods/FoodMatchingApp.jsx
+@@ -1,3 +1,4 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemMatchingApp to avoid duplicate game logic.
+ import React, { useState, useEffect } from 'react';
+ import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
+ import { foodIcons } from '../../../icons'; // נתיב יחסי לקובץ icons.js
+diff --git a/src/components/item/foods/FoodSlider.jsx b/src/components/item/foods/FoodSlider.jsx
+index 912dd2f..bbd77bd 100644
+--- a/src/components/item/foods/FoodSlider.jsx
++++ b/src/components/item/foods/FoodSlider.jsx
+@@ -1,8 +1,10 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemSlider to avoid duplicate slider logic.
+ import React, { useEffect, useState } from "react";
+ import { ChevronLeft, ChevronRight } from "lucide-react";
+ import { motion } from "framer-motion";
+-import { NavLink } from "react-router-dom";
+ import { foodIcons } from '../../../icons';
++import { linksToFoodForSlider } from '../../../links';
++import NavBar from '../../NavBar';
+ 
+ const speakFoodItem = (foodItem) => {
+     const utter = new SpeechSynthesisUtterance(foodItem);
+@@ -36,14 +38,8 @@ export default function FoodSlider({ foodItems }) {
+                 <h2 className="text-2xl font-bold text-red-500">No food items to learn yet 😕</h2>
+                 <p className="text-gray-600 mt-2">Please add food items to start the learning slider.</p>
+ 
+-                <NavLink
+-                    to="/Foods"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-green-600 hover:to-blue-600"
+-                    end
+-                >
+-                    <span className="text-lg">📚</span>
+-                    <span className="text-lg">English Food Vocabulary</span>
+-                </NavLink>
++                {/* FIXED: use the shared navigation component and centralized food links. */}
++                <NavBar navLinks={linksToFoodForSlider} />
+             </div>
+         );
+     }
+@@ -92,24 +88,8 @@ export default function FoodSlider({ foodItems }) {
+ 
+             </div>
+ 
+-            <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
+-                <NavLink
+-                    to="/Foods"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
+-                    end
+-                >
+-                    <span className="text-lg">📚</span>
+-                    <span className="text-lg">My English Food Vocabulary</span>
+-                </NavLink>
+-                <NavLink
+-                    to="/Food3"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
+-                    end
+-                >
+-                    <span className="text-lg">🎯</span>
+-                    <span className="text-lg">Matching Food Game</span>
+-                </NavLink>
+-            </nav>
++            {/* FIXED: use the shared navigation component and centralized food links. */}
++            <NavBar navLinks={linksToFoodForSlider} />
+         </>
+     );
+ }
+diff --git a/src/components/item/foods/FoodTable.jsx b/src/components/item/foods/FoodTable.jsx
+index 2baca8f..e24402f 100644
+--- a/src/components/item/foods/FoodTable.jsx
++++ b/src/components/item/foods/FoodTable.jsx
+@@ -1,9 +1,10 @@
++// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemTable to avoid duplicate table logic.
+ import React, { useState } from "react";
+-import { SpeakerWaveIcon } from "@heroicons/react/24/solid"; // Not used in this component, but kept for consistency if needed later
+ import { Plus, CheckCircle } from "lucide-react";
+-import { NavLink } from "react-router-dom";
+ import { motion } from "framer-motion";
+ import { foodItems } from '../../../icons'; // נתיב יחסי לקובץ icons.js
++import { linksToFoodForTable } from '../../../links';
++import NavBar from '../../NavBar';
+ 
+ 
+ 
+@@ -47,6 +48,15 @@ export default function FoodTable({ onAddToLearn }) {
+                         >
+                             <div
+                                 onClick={() => speakWord(item.name)}
++                                role="button"
++                                tabIndex={0}
++                                onKeyDown={(event) => {
++                                    // FIXED: keyboard users can trigger speech with Enter or Space.
++                                    if (event.key === 'Enter' || event.key === ' ') {
++                                        event.preventDefault();
++                                        speakWord(item.name);
++                                    }
++                                }}
+                                 className="text-5xl mb-2"
+                                 title="Click to speak"
+                             >
+@@ -69,24 +79,8 @@ export default function FoodTable({ onAddToLearn }) {
+                     );
+                 })}
+             </div>
+-            <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
+-                <NavLink
+-                    to="/Food2"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
+-                    end
+-                >
+-                    <span className="text-lg">📚</span>
+-                    <span className="text-lg">My English Food Vocabulary</span>
+-                </NavLink>
+-                <NavLink
+-                    to="/Food3"
+-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
+-                    end
+-                >
+-                    <span className="text-lg">🎯</span>
+-                    <span className="text-lg">Matching Food Game</span>
+-                </NavLink>
+-            </nav>
++            {/* FIXED: use the shared navigation component and centralized food links. */}
++            <NavBar navLinks={linksToFoodForTable} />
+         </div>
+     );
+ }
+diff --git a/src/components/word/Button.jsx b/src/components/word/Button.jsx
+index d05902b..ad82757 100644
+--- a/src/components/word/Button.jsx
++++ b/src/components/word/Button.jsx
+@@ -2,12 +2,15 @@
+ import React from 'react';
+ import styled from 'styled-components';
+ 
+-const Button = ({ text, direction = 'next', onClick, disabled }) => {
++const Button = ({ text, children, direction = 'next', onClick, disabled }) => {
++  // FIXED: prefer nested button content while preserving the existing text prop API.
++  const content = children ?? text;
++
+   return (
+     <StyledWrapper>
+       <div className="btn-conteiner">
+         <button className="btn-content" onClick={onClick} disabled={disabled}>
+-          <span className="btn-title">{text}</span>
++          <span className="btn-title">{content}</span>
+           <span className="icon-arrow">
+             <svg
+               width="66px"
+diff --git a/src/components/word/WordsTable.jsx b/src/components/word/WordsTable.jsx
+index a62f28f..4d2e6e6 100644
+--- a/src/components/word/WordsTable.jsx
++++ b/src/components/word/WordsTable.jsx
+@@ -160,6 +160,15 @@ export default function WordsTable({
+ 
+                             <div
+                                 onClick={() => speakWord(en)}
++                                role="button"
++                                tabIndex={0}
++                                onKeyDown={(event) => {
++                                    // FIXED: keyboard users can trigger speech with Enter or Space.
++                                    if (event.key === 'Enter' || event.key === ' ') {
++                                        event.preventDefault();
++                                        speakWord(en);
++                                    }
++                                }}
+                                 className="text-xl font-bold text-indigo-700 mb-1 cursor-pointer hover:scale-110 transition-transform"
+                                 title="Click to speak"
+                             >
+diff --git a/src/funcLearn.js b/src/funcLearn.js
+deleted file mode 100644
+index 890653f..0000000
+--- a/src/funcLearn.js
++++ /dev/null
+@@ -1,31 +0,0 @@
+-// export const [animalsToLearn, setAnimalsToLearn] = useState([]);
+-// export const [foodToLearn, setFoodToLearn] = useState([]);
+-// export const [colorToLearn, setcolorToLearn] = useState([]);
+-
+-// export const addToLearn = (animal) => {
+-//     if (animal !== undefined) {
+-//       if (!animalsToLearn.includes(animal)) {
+-//         setAnimalsToLearn((prev) => [...prev, animal]);
+-//       }
+-//     }
+-
+-//     console.log({ animalsToLearn })
+-//   };
+-
+-//  export  const addToLearnFood = (foodItem) => {
+-//     if (!foodToLearn.includes(foodItem)) {
+-//       setFoodToLearn((prev) => [...prev, foodItem]);
+-//     }
+-//     console.log(foodToLearn);
+-//   };
+-
+-// export   const handleRemoveFromLearn = (itemName) => {
+-//     setFoodToLearn(prev => prev.filter(item => item !== itemName));
+-//   };
+-
+-//  export  const addToLearnColor = (colorItem) => {
+-//     if (!colorToLearn.includes(colorItem)) {
+-//       setcolorToLearn((prev) => [...prev, colorItem]);
+-//     }
+-//     console.log(colorToLearn);
+-//   };
+diff --git a/src/links.js b/src/links.js
+index d6f2077..088de1f 100644
+--- a/src/links.js
++++ b/src/links.js
+@@ -58,7 +58,13 @@ export const linksToFoodForTable = [
+     { to: "/Food2", icon: "🎯", label: "My English Food Vocabulary" },
+   ];
+ 
+-  export const linksToWordsForGame = [
++export const linksToWordsForGame = [
+     { to: "/words", icon: "📚", label: "English Words Vocabulary" },
+     { to: "/words2", icon: "🎯", label: "English Words Vocabulary" },
+   ];
++
++  // FIXED: shared navigation for the generic letter matching game and its legacy fallback.
++  export const linksToLettersForGame = [
++    { to: "/Letters2", icon: "⌨️", label: "English Letter Keyboard" },
++    { to: "/Letters3", icon: "📚", label: "English Letter Slider" },
++  ];
+diff --git a/src/words.js b/src/words.js
+index 7147855..1a0a7f5 100644
+--- a/src/words.js
++++ b/src/words.js
+@@ -576,7 +576,7 @@ const words = [
+     { en: "Gaze",he: "לבהות"},
+     { en: "Generate",he: "לייצר"},
+     { en: "Get",he: "לקבל"},
+-    { en: "Give"," he": "לתת"},
++    { en: "Give",he: "לתת"}, // FIXED: removed the leading space from the Hebrew property name.
+     { en: "Glance",he: "להעיף מבט"},
+     { en: "Glare",he: "לבהור בזעם"},
+     { en: "Glide",he: "לגלוש / לדאות"},

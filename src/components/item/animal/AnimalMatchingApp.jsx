@@ -1,3 +1,4 @@
+// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemMatchingApp to avoid duplicate game logic.
 import React, { useState, useEffect } from 'react';
 import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
 import { animalIcons } from '../../../icons'; // נתיב יחסי לקובץ icons.js

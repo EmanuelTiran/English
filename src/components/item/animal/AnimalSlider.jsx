@@ -1,8 +1,10 @@
+// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemSlider to avoid duplicate slider logic.
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
 import { animalIcons } from '../../../icons'; 
+import { linksToAnimalForSlider } from '../../../links';
+import NavBar from '../../NavBar';
 
 
 
@@ -38,14 +40,8 @@ export default function AnimalSlider({ animals }) {
           <h2 className="text-2xl font-bold text-red-500">No animals to learn yet 😕</h2>
           <p className="text-gray-600 mt-2">Please add animals to start the learning slider.</p>
 
-          <NavLink
-                    to="/Animal1"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
-
-                    end
-                >
-                    <span className="text-lg">📚</span>
-                    <span className="text-lg"> English Animal Vocabulary</span>        </NavLink>
+          {/* FIXED: use the shared navigation component and centralized animal links. */}
+          <NavBar navLinks={linksToAnimalForSlider} />
         </div>
       );
     }
@@ -93,24 +89,8 @@ export default function AnimalSlider({ animals }) {
        
       </div>
 
-       <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
-                <NavLink
-                    to="/Animal2"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
-
-                    end
-                >
-                    <span className="text-lg">📚</span>
-                    <span className="text-lg">My English Animal Vocabulary</span>        </NavLink>
-                <NavLink
-                    to="/Animal3"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
-
-                    end
-                >
-                    <span className="text-lg">🎯</span>
-                    <span className="text-lg">Matching Animal Game</span>        </NavLink>
-            </nav>
+       {/* FIXED: use the shared navigation component and centralized animal links. */}
+       <NavBar navLinks={linksToAnimalForSlider} />
       </>
     );
   }

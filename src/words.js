@@ -576,7 +576,7 @@
     { en: "Gaze",he: "לבהות"},
     { en: "Generate",he: "לייצר"},
     { en: "Get",he: "לקבל"},
-    { en: "Give"," he": "לתת"},
+    { en: "Give",he: "לתת"}, // FIXED: removed the leading space from the Hebrew property name.
     { en: "Glance",he: "להעיף מבט"},
     { en: "Glare",he: "לבהור בזעם"},
     { en: "Glide",he: "לגלוש / לדאות"},

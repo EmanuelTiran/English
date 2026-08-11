@@ -160,6 +160,15 @@ export default function WordsTable({
 
                             <div
                                 onClick={() => speakWord(en)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(event) => {
+                                    // FIXED: keyboard users can trigger speech with Enter or Space.
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        event.preventDefault();
+                                        speakWord(en);
+                                    }
+                                }}
                                 className="text-xl font-bold text-indigo-700 mb-1 cursor-pointer hover:scale-110 transition-transform"
                                 title="Click to speak"
                             >

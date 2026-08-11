@@ -2,12 +2,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Button = ({ text, direction = 'next', onClick, disabled }) => {
+const Button = ({ text, children, direction = 'next', onClick, disabled }) => {
+  // FIXED: prefer nested button content while preserving the existing text prop API.
+  const content = children ?? text;
+
   return (
     <StyledWrapper>
       <div className="btn-conteiner">
         <button className="btn-content" onClick={onClick} disabled={disabled}>
-          <span className="btn-title">{text}</span>
+          <span className="btn-title">{content}</span>
           <span className="icon-arrow">
             <svg
               width="66px"

@@ -1,9 +1,10 @@
+// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemTable to avoid duplicate table logic.
 import React, { useState } from "react";
-import { SpeakerWaveIcon } from "@heroicons/react/24/solid";
 import { Plus, CheckCircle } from "lucide-react";
-import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { animals } from '../../../icons'; // נתיב יחסי לקובץ icons.js
+import { linksToAnimalForTable } from '../../../links';
+import NavBar from '../../NavBar';
 
 
 
@@ -48,6 +49,15 @@ export default function AnimalTable({ onAddToLearn }) {
                         >
                             <div
                                 onClick={() => speakWord(animal.name)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(event) => {
+                                    // FIXED: keyboard users can trigger speech with Enter or Space.
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        event.preventDefault();
+                                        speakWord(animal.name);
+                                    }
+                                }}
                                 className="text-5xl mb-2"
                                 title="Click to speak"
                             >
@@ -70,25 +80,8 @@ export default function AnimalTable({ onAddToLearn }) {
                     );
                 })}
             </div>
-            <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
-                <NavLink
-                    to="/Animal2"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
-
-                    end
-                >
-                    <span className="text-lg">📚</span>
-                    <span className="text-lg">My English Animal Vocabulary</span>        </NavLink>
-                <NavLink
-                    to="/Animal3"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
-
-                    end
-                >
-                    <span className="text-lg">🎯</span>
-                    <span className="text-lg">Matching Animal Game</span>
-                </NavLink>
-            </nav>
+            {/* FIXED: use the shared navigation component and centralized animal links. */}
+            <NavBar navLinks={linksToAnimalForTable} />
         </div>
     );
 }

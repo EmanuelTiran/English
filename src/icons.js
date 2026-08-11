@@ -123,11 +123,130 @@ export  const animalIcons = {
   "Gray": "🗻🌑"
   };
 
+  // FIXED: data and icons for the previously unfinished item categories.
+  export const furnitureIcons = {
+    "Chair": "🪑",
+    "Table": "🪑",
+    "Sofa": "🛋️",
+    "Bed": "🛏️",
+    "Desk": "🖥️",
+    "Wardrobe": "🚪",
+    "Bookshelf": "📚",
+    "Cabinet": "🗄️",
+    "Dresser": "🗄️",
+    "Nightstand": "🛏️",
+    "Armchair": "🛋️",
+    "Stool": "🪑",
+    "Bench": "🪑",
+    "Lamp": "💡",
+    "Mirror": "🪞",
+    "Rug": "🧶",
+    "Curtains": "🪟",
+    "Clock": "🕰️",
+    "Television": "📺",
+    "Coffee Table": "☕",
+    "Dining Table": "🍽️",
+    "Rocking Chair": "🪑",
+    "Bunk Bed": "🛏️",
+    "Crib": "🛏️",
+    "Ottoman": "🛋️",
+    "Chest of Drawers": "🗄️"
+  };
+
+  export const vehicleIcons = {
+    "Car": "🚗",
+    "Bus": "🚌",
+    "Bicycle": "🚲",
+    "Motorcycle": "🏍️",
+    "Train": "🚆",
+    "Airplane": "✈️",
+    "Helicopter": "🚁",
+    "Boat": "⛵",
+    "Ship": "🚢",
+    "Truck": "🚚",
+    "Taxi": "🚕",
+    "Ambulance": "🚑",
+    "Fire Truck": "🚒",
+    "Police Car": "🚓",
+    "Scooter": "🛴",
+    "Tractor": "🚜",
+    "Subway": "🚇",
+    "Tram": "🚊",
+    "Van": "🚐",
+    "Rocket": "🚀",
+    "Hot Air Balloon": "🎈",
+    "Canoe": "🛶",
+    "Kayak": "🛶",
+    "Ferry": "⛴️",
+    "Skateboard": "🛹"
+  };
+
+  export const clothesIcons = {
+    "Shirt": "👔",
+    "T-Shirt": "👕",
+    "Pants": "👖",
+    "Jeans": "👖",
+    "Dress": "👗",
+    "Skirt": "👗",
+    "Shorts": "🩳",
+    "Jacket": "🧥",
+    "Coat": "🧥",
+    "Sweater": "👕",
+    "Hoodie": "👕",
+    "Suit": "🤵",
+    "Socks": "🧦",
+    "Shoes": "👟",
+    "Boots": "🥾",
+    "Sandals": "🩴",
+    "Hat": "🎩",
+    "Cap": "🧢",
+    "Scarf": "🧣",
+    "Gloves": "🧤",
+    "Belt": "🪢",
+    "Tie": "👔",
+    "Pajamas": "🥱",
+    "Swimsuit": "🩱",
+    "Raincoat": "🧥"
+  };
+
+  export const shapeIcons = {
+    "Circle": "⚪",
+    "Square": "🟦",
+    "Triangle": "🔺",
+    "Rectangle": "▬",
+    "Oval": "⬭",
+    "Diamond": "🔶",
+    "Star": "⭐",
+    "Heart": "❤️",
+    "Pentagon": "⬠",
+    "Hexagon": "⬡",
+    "Octagon": "🛑",
+    "Crescent": "🌙",
+    "Cross": "➕",
+    "Arrow": "➡️",
+    "Cube": "🧊",
+    "Sphere": "🔵",
+    "Cylinder": "🥫",
+    "Cone": "🔺"
+  };
+
   export  const itemIcons = {
     ...foodIcons,
     ...animalIcons,
-    ...colorIcons
+    ...colorIcons,
+    ...furnitureIcons,
+    ...vehicleIcons,
+    ...clothesIcons,
+    ...shapeIcons
 };
+
+  const iconMapToItems = (iconMap) =>
+    Object.entries(iconMap).map(([name, icon]) => ({ name, icon }));
+
+  export const furnitureItems = iconMapToItems(furnitureIcons);
+  export const vehicleItems = iconMapToItems(vehicleIcons);
+  export const clothesItems = iconMapToItems(clothesIcons);
+  export const shapeItems = iconMapToItems(shapeIcons);
   export const animals = [
     { name: "Dog", icon: "🐶" },
     { name: "Cat", icon: "🐱" },

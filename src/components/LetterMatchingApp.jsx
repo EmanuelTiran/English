@@ -1,5 +1,7 @@
+// DEPRECATED: kept for compatibility; AppRoutes uses the configurable ItemMatchingApp for letter matching.
 import React, { useState, useEffect } from 'react';
 import { Volume2, RotateCcw, Star, Trophy } from 'lucide-react';
+import NavBar from './NavBar';
 
 // ✅ אפקטים קוליים
 const playSound = (type) => {
@@ -12,7 +14,8 @@ const playSound = (type) => {
   audio.play();
 };
 
-const LetterMatchingApp = () => {
+const LetterMatchingApp = ({ navLinks = [] }) => {
+  // FIXED: retain generic navigation support for any direct legacy usage.
   const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz'.split('');
   const allLetters = [...upperCaseLetters, ...lowerCaseLetters];
@@ -121,7 +124,7 @@ const LetterMatchingApp = () => {
 
   if (gameComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-green-200 p-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-green-200 p-6">
         <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-md w-full">
           <div className="text-6xl mb-4">🎉</div>
           <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
@@ -135,12 +138,13 @@ const LetterMatchingApp = () => {
             Play Again
           </button>
         </div>
+        <NavBar navLinks={navLinks} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-xl w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">Letter Matching Game</h1>
@@ -216,6 +220,7 @@ const LetterMatchingApp = () => {
           </div>
         )}
       </div>
+      <NavBar navLinks={navLinks} />
     </div>
   );
 };

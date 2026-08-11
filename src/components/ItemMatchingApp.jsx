@@ -14,7 +14,20 @@ const playSound = (type) => {
   audio.play();
 };
 
-const ItemMatchingApp = ({ items ,navLinks}) => {
+const ItemMatchingApp = ({
+  items = [],
+  navLinks = [],
+  iconMap = itemIcons,
+  getCorrectOption = (item) => item,
+  getOptionPool = () => items,
+  renderCurrentItem,
+  title = 'Item Matching Game',
+  prompt = 'Which item is this?',
+  completionTitle = 'All items matched!',
+  progressLabel = 'items',
+  optionClassName = 'text-xl',
+}) => {
+  // FIXED: configurable matching rules let letters reuse this generic game without changing item behavior.
   const getRandomItem = (completedSet) => {
     const available = items.filter(i => !completedSet.has(i));
     return available.length === 0 ? null : available[Math.floor(Math.random() * available.length)];
@@ -54,8 +67,9 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
   }, []);
 
   function generateOptions(correct) {
-    const options = [correct];
-    const others = items.filter(i => i !== correct);
+    const correctOption = getCorrectOption(correct);
+    const options = [correctOption];
+    const others = getOptionPool(correct).filter(i => i !== correctOption);
     while (options.length < 4 && others.length > 0) {
       const rand = others[Math.floor(Math.random() * others.length)];
       if (!options.includes(rand)) options.push(rand);
@@ -64,7 +78,8 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
   }
 
   const handleAnswer = (selected) => {
-    const isCorrect = selected === currentItem;
+    const correctOption = getCorrectOption(currentItem);
+    const isCorrect = selected === correctOption;
     setTotalQuestions(prev => prev + 1);
 
     if (isCorrect) {
@@ -122,7 +137,7 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
         <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-md w-full">
           <div className="text-6xl mb-4">🎉</div>
           <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">All items matched!</h2>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">{completionTitle}</h2>
           <p className="text-lg text-gray-600 mb-2">Score: {score}/{totalQuestions}</p>
           <button
             onClick={resetGame}
@@ -140,7 +155,7 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
     <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-xl w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Item Matching Game</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">{title}</h1>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
               <Star className="text-yellow-500 w-5 h-5" />
@@ -161,13 +176,15 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-sm text-gray-600">Progress: {completedItems.size}/{items.length} items</p>
+          <p className="text-sm text-gray-600">Progress: {completedItems.size}/{items.length} {progressLabel}</p>
         </div>
 
         <div className="text-center mb-8">
-          <h2 className="text-2xl text-gray-700 mb-4">Which item is this?</h2>
+          <h2 className="text-2xl text-gray-700 mb-4">{prompt}</h2>
           <div className="relative">
-            <div className="text-8xl mb-4 animate-pulse">{itemIcons[currentItem] || "❓"}</div>
+            <div className="text-8xl mb-4 animate-pulse">
+              {renderCurrentItem ? renderCurrentItem(currentItem) : iconMap[currentItem] || "❓"}
+            </div>
             <button
               onClick={() => speakItem(currentItem)}
               className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full"
@@ -185,12 +202,12 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
               onClick={() => handleAnswer(name)}
               disabled={showFeedback !== ''}
               className={`
-                text-xl font-bold py-6 px-4 rounded-xl border-4 transition-all duration-200
+                ${optionClassName} font-bold py-6 px-4 rounded-xl border-4 transition-all duration-200
                 ${showFeedback === ''
                   ? 'bg-gray-50 border-gray-300 hover:border-blue-400 hover:bg-blue-50 active:scale-95'
                   : 'opacity-50 cursor-not-allowed'}
-                ${showFeedback === 'correct' && name === currentItem ? 'bg-green-100 border-green-400 text-green-700' : ''}
-                ${showFeedback === 'incorrect' && name === currentItem ? 'bg-green-100 border-green-400 text-green-700' : ''}
+                ${showFeedback === 'correct' && name === getCorrectOption(currentItem) ? 'bg-green-100 border-green-400 text-green-700' : ''}
+                ${showFeedback === 'incorrect' && name === getCorrectOption(currentItem) ? 'bg-green-100 border-green-400 text-green-700' : ''}
               `}
             >
               {name}
@@ -211,7 +228,7 @@ const ItemMatchingApp = ({ items ,navLinks}) => {
             </p>
             {showFeedback === 'incorrect' && (
               <p className="text-sm text-gray-600 mt-2">
-                The correct answer was: <span className="font-bold text-lg">{currentItem}</span>
+                The correct answer was: <span className="font-bold text-lg">{getCorrectOption(currentItem)}</span>
               </p>
             )}
           </div>

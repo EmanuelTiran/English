@@ -26,10 +26,11 @@ const Items = () => {
       textColor: 'text-green-100'
     },
     {
-      name: 'Vehicle',
+      // FIXED: this card now opens the completed vehicle learning flow.
+      name: 'Vehicles',
       path: '/Vehicle',
       emoji: '🚁',
-      description: 'all kinds of vehicle',
+      description: 'Explore different ways to travel',
       gradientFrom: 'from-purple-500',
       gradientTo: 'to-purple-700',
       hoverFrom: 'hover:from-purple-600',
@@ -37,7 +38,8 @@ const Items = () => {
       textColor: 'text-purple-100'
     },
     {
-      name: 'clothes',
+      // FIXED: consistent category label for the completed clothes flow.
+      name: 'Clothes',
       path: '/Clothes',
       emoji: '👚',
       description: 'Fashion for every season',

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+// FIXED: InteractiveBody.css was removed because this component uses inline styles and none of that file's selectors.
+
 const HumanBody = () => {
   const [clickedPart, setClickedPart] = useState('');
 

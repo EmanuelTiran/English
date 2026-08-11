@@ -1,0 +1,436 @@
+diff --git a/src/components/AppRoutes.jsx b/src/components/AppRoutes.jsx
+index 223c0e9..46a23ec 100644
+--- a/src/components/AppRoutes.jsx
++++ b/src/components/AppRoutes.jsx
+@@ -15,13 +15,21 @@ import HumanBody from "./item/body/HumanBody";
+ import { useAppContext } from "./useAppContext";
+ import MatchingGame from "../components/ItemMatchingApp";
+ 
+-import { animalIcons, animals, colorIcons, colorsItem, foodIcons, foodItems } from '../icons';
++import {
++  animalIcons, animals, colorIcons, colorsItem, foodIcons, foodItems,
++  furnitureIcons, furnitureItems, vehicleIcons, vehicleItems,
++  clothesIcons, clothesItems, shapeIcons, shapeItems
++} from '../icons';
+ import {
+   linksToAnimalForTable, linksToColorsForTable, linksToFoodForTable,
+   linksToAnimalForSlider, linksToColorsForSlider, linksToFoodForSlider,
+   linksToAnimalForGame, linksToColorsForGame, linksToFoodForGame,
+   linksToWordsForTable, linksToWordsForSlider, linksToWordsForGame,
+-  linksToLettersForGame
++  linksToLettersForGame,
++  linksToFurnitureForTable, linksToFurnitureForSlider, linksToFurnitureForGame,
++  linksToVehicleForTable, linksToVehicleForSlider, linksToVehicleForGame,
++  linksToClothesForTable, linksToClothesForSlider, linksToClothesForGame,
++  linksToShapesForTable, linksToShapesForSlider, linksToShapesForGame
+ } from '../links';
+ import StoryTranslator from './StoryTranslator';
+ import CustomStoryBuilder from './CustomStoryBuilder';
+@@ -42,6 +50,10 @@ export const AppRoutes = () => {
+     animalsToLearn,
+     foodToLearn,
+     colorToLearn,
++    furnitureToLearn,
++    vehicleToLearn,
++    clothesToLearn,
++    shapeToLearn,
+     addToLearn,
+     wordToLearn,
+     removeAnimal,
+@@ -50,7 +62,15 @@ export const AppRoutes = () => {
+     addToLearnColor,
+     removeColor,
+     removeWord,
+-    addToLearnWord
++    addToLearnWord,
++    addToLearnFurniture,
++    removeFurniture,
++    addToLearnVehicle,
++    removeVehicle,
++    addToLearnClothes,
++    removeClothes,
++    addToLearnShape,
++    removeShape
+   } = useAppContext();
+ 
+   return (
+@@ -116,6 +136,82 @@ export const AppRoutes = () => {
+       <Route path="/color2" element={<ItemSlider items={colorToLearn} itemIcons={colorIcons} navLinks={linksToColorsForSlider} />} />
+       <Route path="/color3" element={<MatchingGame items={colorToLearn} navLinks={linksToColorsForGame} />} />
+ 
++      {/* FIXED: complete Furniture with selection, slider, and matching routes. */}
++      <Route path="/furniture" element={<ItemTable
++        items={furnitureItems}
++        title="What furniture will we learn about today?"
++        onAddToLearn={addToLearnFurniture}
++        onRemoveFromLearn={removeFurniture}
++        existingItems={furnitureToLearn}
++        navLinks={linksToFurnitureForTable}
++      />} />
++      <Route path="/furniture2" element={<ItemSlider
++        items={furnitureToLearn}
++        itemIcons={furnitureIcons}
++        navLinks={linksToFurnitureForSlider}
++      />} />
++      <Route path="/furniture3" element={<MatchingGame
++        items={furnitureToLearn}
++        navLinks={linksToFurnitureForGame}
++      />} />
++
++      {/* FIXED: complete Vehicle with selection, slider, and matching routes. */}
++      <Route path="/Vehicle" element={<ItemTable
++        items={vehicleItems}
++        title="What vehicles will we learn about today?"
++        onAddToLearn={addToLearnVehicle}
++        onRemoveFromLearn={removeVehicle}
++        existingItems={vehicleToLearn}
++        navLinks={linksToVehicleForTable}
++      />} />
++      <Route path="/Vehicle2" element={<ItemSlider
++        items={vehicleToLearn}
++        itemIcons={vehicleIcons}
++        navLinks={linksToVehicleForSlider}
++      />} />
++      <Route path="/Vehicle3" element={<MatchingGame
++        items={vehicleToLearn}
++        navLinks={linksToVehicleForGame}
++      />} />
++
++      {/* FIXED: complete Clothes with selection, slider, and matching routes. */}
++      <Route path="/Clothes" element={<ItemTable
++        items={clothesItems}
++        title="What clothes will we learn about today?"
++        onAddToLearn={addToLearnClothes}
++        onRemoveFromLearn={removeClothes}
++        existingItems={clothesToLearn}
++        navLinks={linksToClothesForTable}
++      />} />
++      <Route path="/Clothes2" element={<ItemSlider
++        items={clothesToLearn}
++        itemIcons={clothesIcons}
++        navLinks={linksToClothesForSlider}
++      />} />
++      <Route path="/Clothes3" element={<MatchingGame
++        items={clothesToLearn}
++        navLinks={linksToClothesForGame}
++      />} />
++
++      {/* FIXED: complete Shapes with selection, slider, and matching routes. */}
++      <Route path="/Shapes" element={<ItemTable
++        items={shapeItems}
++        title="What shapes will we learn about today?"
++        onAddToLearn={addToLearnShape}
++        onRemoveFromLearn={removeShape}
++        existingItems={shapeToLearn}
++        navLinks={linksToShapesForTable}
++      />} />
++      <Route path="/Shapes2" element={<ItemSlider
++        items={shapeToLearn}
++        itemIcons={shapeIcons}
++        navLinks={linksToShapesForSlider}
++      />} />
++      <Route path="/Shapes3" element={<MatchingGame
++        items={shapeToLearn}
++        navLinks={linksToShapesForGame}
++      />} />
++
+       <Route path="/123" element={<HebrewEnglishTranslator />} />
+       <Route path="/body" element={<HumanBody />} />
+       <Route path="/Hearing" element={<Hearing />} />
+diff --git a/src/components/Items.jsx b/src/components/Items.jsx
+index d981008..721e0fe 100644
+--- a/src/components/Items.jsx
++++ b/src/components/Items.jsx
+@@ -26,10 +26,11 @@ const Items = () => {
+       textColor: 'text-green-100'
+     },
+     {
+-      name: 'Vehicle',
++      // FIXED: this card now opens the completed vehicle learning flow.
++      name: 'Vehicles',
+       path: '/Vehicle',
+       emoji: '🚁',
+-      description: 'all kinds of vehicle',
++      description: 'Explore different ways to travel',
+       gradientFrom: 'from-purple-500',
+       gradientTo: 'to-purple-700',
+       hoverFrom: 'hover:from-purple-600',
+@@ -37,7 +38,8 @@ const Items = () => {
+       textColor: 'text-purple-100'
+     },
+     {
+-      name: 'clothes',
++      // FIXED: consistent category label for the completed clothes flow.
++      name: 'Clothes',
+       path: '/Clothes',
+       emoji: '👚',
+       description: 'Fashion for every season',
+diff --git a/src/components/useAppContext.jsx b/src/components/useAppContext.jsx
+index 35826eb..0e2ba61 100644
+--- a/src/components/useAppContext.jsx
++++ b/src/components/useAppContext.jsx
+@@ -16,6 +16,11 @@ export const AppProvider = ({ children }) => {
+   const [foodToLearn, setFoodToLearn] = useState([]);
+   const [colorToLearn, setColorToLearn] = useState([]);
+   const [wordToLearn, setWordToLearn] = useState([]);
++  // FIXED: selection state for every category that previously linked to a 404 page.
++  const [furnitureToLearn, setFurnitureToLearn] = useState([]);
++  const [vehicleToLearn, setVehicleToLearn] = useState([]);
++  const [clothesToLearn, setClothesToLearn] = useState([]);
++  const [shapeToLearn, setShapeToLearn] = useState([]);
+ 
+   const addToLearn = (animal) => {
+     if (animal !== undefined) {
+@@ -63,11 +68,35 @@ export const AppProvider = ({ children }) => {
+     setWordToLearn(prev => prev.filter(word => word !== anyWord));
+   };
+ 
++  const addUniqueItem = (setter) => (itemName) => {
++    if (itemName !== undefined) {
++      setter(prev => prev.includes(itemName) ? prev : [...prev, itemName]);
++    }
++  };
++
++  const removeItem = (setter) => (itemName) => {
++    setter(prev => prev.filter(item => item !== itemName));
++  };
++
++  // FIXED: shared add/remove behavior keeps the new category state concise and consistent.
++  const addToLearnFurniture = addUniqueItem(setFurnitureToLearn);
++  const removeFurniture = removeItem(setFurnitureToLearn);
++  const addToLearnVehicle = addUniqueItem(setVehicleToLearn);
++  const removeVehicle = removeItem(setVehicleToLearn);
++  const addToLearnClothes = addUniqueItem(setClothesToLearn);
++  const removeClothes = removeItem(setClothesToLearn);
++  const addToLearnShape = addUniqueItem(setShapeToLearn);
++  const removeShape = removeItem(setShapeToLearn);
++
+   const value = {
+     animalsToLearn,
+     foodToLearn,
+     colorToLearn,
+     wordToLearn,
++    furnitureToLearn,
++    vehicleToLearn,
++    clothesToLearn,
++    shapeToLearn,
+     addToLearn,
+     removeAnimal,
+     addToLearnFood,
+@@ -75,7 +104,15 @@ export const AppProvider = ({ children }) => {
+     addToLearnColor,
+     removeColor,
+     removeWord,
+-    addToLearnWord
++    addToLearnWord,
++    addToLearnFurniture,
++    removeFurniture,
++    addToLearnVehicle,
++    removeVehicle,
++    addToLearnClothes,
++    removeClothes,
++    addToLearnShape,
++    removeShape
+   };
+ 
+   return (
+diff --git a/src/icons.js b/src/icons.js
+index 54ba101..16421d7 100644
+--- a/src/icons.js
++++ b/src/icons.js
+@@ -123,11 +123,130 @@ export  const animalIcons = {
+   "Gray": "🗻🌑"
+   };
+ 
++  // FIXED: data and icons for the previously unfinished item categories.
++  export const furnitureIcons = {
++    "Chair": "🪑",
++    "Table": "🪑",
++    "Sofa": "🛋️",
++    "Bed": "🛏️",
++    "Desk": "🖥️",
++    "Wardrobe": "🚪",
++    "Bookshelf": "📚",
++    "Cabinet": "🗄️",
++    "Dresser": "🗄️",
++    "Nightstand": "🛏️",
++    "Armchair": "🛋️",
++    "Stool": "🪑",
++    "Bench": "🪑",
++    "Lamp": "💡",
++    "Mirror": "🪞",
++    "Rug": "🧶",
++    "Curtains": "🪟",
++    "Clock": "🕰️",
++    "Television": "📺",
++    "Coffee Table": "☕",
++    "Dining Table": "🍽️",
++    "Rocking Chair": "🪑",
++    "Bunk Bed": "🛏️",
++    "Crib": "🛏️",
++    "Ottoman": "🛋️",
++    "Chest of Drawers": "🗄️"
++  };
++
++  export const vehicleIcons = {
++    "Car": "🚗",
++    "Bus": "🚌",
++    "Bicycle": "🚲",
++    "Motorcycle": "🏍️",
++    "Train": "🚆",
++    "Airplane": "✈️",
++    "Helicopter": "🚁",
++    "Boat": "⛵",
++    "Ship": "🚢",
++    "Truck": "🚚",
++    "Taxi": "🚕",
++    "Ambulance": "🚑",
++    "Fire Truck": "🚒",
++    "Police Car": "🚓",
++    "Scooter": "🛴",
++    "Tractor": "🚜",
++    "Subway": "🚇",
++    "Tram": "🚊",
++    "Van": "🚐",
++    "Rocket": "🚀",
++    "Hot Air Balloon": "🎈",
++    "Canoe": "🛶",
++    "Kayak": "🛶",
++    "Ferry": "⛴️",
++    "Skateboard": "🛹"
++  };
++
++  export const clothesIcons = {
++    "Shirt": "👔",
++    "T-Shirt": "👕",
++    "Pants": "👖",
++    "Jeans": "👖",
++    "Dress": "👗",
++    "Skirt": "👗",
++    "Shorts": "🩳",
++    "Jacket": "🧥",
++    "Coat": "🧥",
++    "Sweater": "👕",
++    "Hoodie": "👕",
++    "Suit": "🤵",
++    "Socks": "🧦",
++    "Shoes": "👟",
++    "Boots": "🥾",
++    "Sandals": "🩴",
++    "Hat": "🎩",
++    "Cap": "🧢",
++    "Scarf": "🧣",
++    "Gloves": "🧤",
++    "Belt": "🪢",
++    "Tie": "👔",
++    "Pajamas": "🥱",
++    "Swimsuit": "🩱",
++    "Raincoat": "🧥"
++  };
++
++  export const shapeIcons = {
++    "Circle": "⚪",
++    "Square": "🟦",
++    "Triangle": "🔺",
++    "Rectangle": "▬",
++    "Oval": "⬭",
++    "Diamond": "🔶",
++    "Star": "⭐",
++    "Heart": "❤️",
++    "Pentagon": "⬠",
++    "Hexagon": "⬡",
++    "Octagon": "🛑",
++    "Crescent": "🌙",
++    "Cross": "➕",
++    "Arrow": "➡️",
++    "Cube": "🧊",
++    "Sphere": "🔵",
++    "Cylinder": "🥫",
++    "Cone": "🔺"
++  };
++
+   export  const itemIcons = {
+     ...foodIcons,
+     ...animalIcons,
+-    ...colorIcons
++    ...colorIcons,
++    ...furnitureIcons,
++    ...vehicleIcons,
++    ...clothesIcons,
++    ...shapeIcons
+ };
++
++  const iconMapToItems = (iconMap) =>
++    Object.entries(iconMap).map(([name, icon]) => ({ name, icon }));
++
++  export const furnitureItems = iconMapToItems(furnitureIcons);
++  export const vehicleItems = iconMapToItems(vehicleIcons);
++  export const clothesItems = iconMapToItems(clothesIcons);
++  export const shapeItems = iconMapToItems(shapeIcons);
+   export const animals = [
+     { name: "Dog", icon: "🐶" },
+     { name: "Cat", icon: "🐱" },
+diff --git a/src/links.js b/src/links.js
+index 088de1f..f07a79a 100644
+--- a/src/links.js
++++ b/src/links.js
+@@ -68,3 +68,59 @@ export const linksToWordsForGame = [
+     { to: "/Letters2", icon: "⌨️", label: "English Letter Keyboard" },
+     { to: "/Letters3", icon: "📚", label: "English Letter Slider" },
+   ];
++
++  // FIXED: navigation for Furniture table, slider, and matching game.
++  export const linksToFurnitureForTable = [
++    { to: "/furniture2", icon: "📚", label: "My English Furniture Vocabulary" },
++    { to: "/furniture3", icon: "🎯", label: "Matching Furniture Game" },
++  ];
++  export const linksToFurnitureForSlider = [
++    { to: "/furniture", icon: "📚", label: "English Furniture Vocabulary" },
++    { to: "/furniture3", icon: "🎯", label: "Matching Furniture Game" },
++  ];
++  export const linksToFurnitureForGame = [
++    { to: "/furniture", icon: "📚", label: "English Furniture Vocabulary" },
++    { to: "/furniture2", icon: "🛋️", label: "My English Furniture Vocabulary" },
++  ];
++
++  // FIXED: navigation for Vehicle table, slider, and matching game.
++  export const linksToVehicleForTable = [
++    { to: "/Vehicle2", icon: "📚", label: "My English Vehicle Vocabulary" },
++    { to: "/Vehicle3", icon: "🎯", label: "Matching Vehicle Game" },
++  ];
++  export const linksToVehicleForSlider = [
++    { to: "/Vehicle", icon: "📚", label: "English Vehicle Vocabulary" },
++    { to: "/Vehicle3", icon: "🎯", label: "Matching Vehicle Game" },
++  ];
++  export const linksToVehicleForGame = [
++    { to: "/Vehicle", icon: "📚", label: "English Vehicle Vocabulary" },
++    { to: "/Vehicle2", icon: "🚗", label: "My English Vehicle Vocabulary" },
++  ];
++
++  // FIXED: navigation for Clothes table, slider, and matching game.
++  export const linksToClothesForTable = [
++    { to: "/Clothes2", icon: "📚", label: "My English Clothes Vocabulary" },
++    { to: "/Clothes3", icon: "🎯", label: "Matching Clothes Game" },
++  ];
++  export const linksToClothesForSlider = [
++    { to: "/Clothes", icon: "📚", label: "English Clothes Vocabulary" },
++    { to: "/Clothes3", icon: "🎯", label: "Matching Clothes Game" },
++  ];
++  export const linksToClothesForGame = [
++    { to: "/Clothes", icon: "📚", label: "English Clothes Vocabulary" },
++    { to: "/Clothes2", icon: "👕", label: "My English Clothes Vocabulary" },
++  ];
++
++  // FIXED: navigation for Shapes table, slider, and matching game.
++  export const linksToShapesForTable = [
++    { to: "/Shapes2", icon: "📚", label: "My English Shapes Vocabulary" },
++    { to: "/Shapes3", icon: "🎯", label: "Matching Shapes Game" },
++  ];
++  export const linksToShapesForSlider = [
++    { to: "/Shapes", icon: "📚", label: "English Shapes Vocabulary" },
++    { to: "/Shapes3", icon: "🎯", label: "Matching Shapes Game" },
++  ];
++  export const linksToShapesForGame = [
++    { to: "/Shapes", icon: "📚", label: "English Shapes Vocabulary" },
++    { to: "/Shapes2", icon: "🔺", label: "My English Shapes Vocabulary" },
++  ];

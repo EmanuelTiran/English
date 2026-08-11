@@ -19,7 +19,8 @@ const playClickSound = () => {
 };
 
 export default function ItemSlider({ items = [], itemIcons = {}, letters = false, navLinks = [] }) {
-  const isLettersMode = letters || items.length === 0;
+  // FIXED: an empty item list is not alphabet mode; only the explicit letters prop enables it.
+  const isLettersMode = letters;
   const content = isLettersMode ? defaultAlphabet : items;
 
   const [index, setIndex] = useState(0);
@@ -40,7 +41,7 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
   };
 
   useEffect(() => {
-    speakText(current);
+    if (current) speakText(current);
   }, [current]);
 
   useEffect(() => {
@@ -51,6 +52,18 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
+
+  if (content.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-yellow-100 py-12 px-4 text-center">
+        <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl p-6">
+          <h2 className="text-2xl font-bold text-red-500">No items to learn yet 😕</h2>
+          <p className="text-gray-600 mt-2">Please add items before opening the learning slider.</p>
+        </div>
+        <NavBar navLinks={navLinks} />
+      </div>
+    );
+  }
 
   const variants = {
     enter: (direction) => ({

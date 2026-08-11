@@ -1,8 +1,10 @@
+// DEPRECATED: kept for compatibility; AppRoutes uses the generic ItemSlider to avoid duplicate slider logic.
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
 import { foodIcons } from '../../../icons';
+import { linksToFoodForSlider } from '../../../links';
+import NavBar from '../../NavBar';
 
 const speakFoodItem = (foodItem) => {
     const utter = new SpeechSynthesisUtterance(foodItem);
@@ -36,14 +38,8 @@ export default function FoodSlider({ foodItems }) {
                 <h2 className="text-2xl font-bold text-red-500">No food items to learn yet 😕</h2>
                 <p className="text-gray-600 mt-2">Please add food items to start the learning slider.</p>
 
-                <NavLink
-                    to="/Foods"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-green-600 hover:to-blue-600"
-                    end
-                >
-                    <span className="text-lg">📚</span>
-                    <span className="text-lg">English Food Vocabulary</span>
-                </NavLink>
+                {/* FIXED: use the shared navigation component and centralized food links. */}
+                <NavBar navLinks={linksToFoodForSlider} />
             </div>
         );
     }
@@ -92,24 +88,8 @@ export default function FoodSlider({ foodItems }) {
 
             </div>
 
-            <nav className="mt-8 flex flex-col md:flex-row gap-4 justify-center items-center text-center">
-                <NavLink
-                    to="/Foods"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-purple-600 hover:to-pink-600"
-                    end
-                >
-                    <span className="text-lg">📚</span>
-                    <span className="text-lg">My English Food Vocabulary</span>
-                </NavLink>
-                <NavLink
-                    to="/Food3"
-                    className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
-                    end
-                >
-                    <span className="text-lg">🎯</span>
-                    <span className="text-lg">Matching Food Game</span>
-                </NavLink>
-            </nav>
+            {/* FIXED: use the shared navigation component and centralized food links. */}
+            <NavBar navLinks={linksToFoodForSlider} />
         </>
     );
 }
