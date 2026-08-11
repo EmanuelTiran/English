@@ -61,17 +61,16 @@ export default function WordsGame({ navLinks = [] }) {
   };
 
   const generateOptions = (correct, wordList) => {
-    const options = [correct.he];
-    const others = wordList.filter(w => w.he !== correct.he && w.he).map(w => w.he);
-    while (options.length < 4 && others.length > 0) {
-      const randIndex = Math.floor(Math.random() * others.length);
-      const rand = others[randIndex];
-      if (!options.includes(rand)) {
-        options.push(rand);
-        others.splice(randIndex, 1); // Remove used option to avoid duplicates
-      }
-    }
-    return options.sort(() => Math.random() - 0.5);
+    // FIXED: duplicate translations can no longer keep the option loop running forever.
+    const distractors = [...new Set(
+      wordList
+        .filter(word => word.he && word.he !== correct.he)
+        .map(word => word.he)
+    )]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
+    return [correct.he, ...distractors].sort(() => Math.random() - 0.5);
   };
 
   const handleAnswer = (selected) => {

@@ -54,13 +54,12 @@ const AnimalMatchingApp = ({ animals }) => {
 
 
   function generateOptions(correct) {
-    const options = [correct];
-    const otherAnimals = animals.filter(a => a !== correct);
-    while (options.length < 4 && otherAnimals.length > 0) {
-      const rand = otherAnimals[Math.floor(Math.random() * otherAnimals.length)];
-      if (!options.includes(rand)) options.push(rand);
-    }
-    return options.sort(() => Math.random() - 0.5);
+    // FIXED: a finite unique pool prevents freezing when fewer than four animals were selected.
+    const distractors = [...new Set(animals.filter(animal => animal !== correct))]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
+    return [correct, ...distractors].sort(() => Math.random() - 0.5);
   }
 
   const handleAnswer = (selected) => {

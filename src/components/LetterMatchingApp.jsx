@@ -63,15 +63,12 @@ const LetterMatchingApp = ({ navLinks = [] }) => {
     const pool = isUpper ? lowerCaseLetters : upperCaseLetters;
     const correctOption = isUpper ? correctLetter.toLowerCase() : correctLetter.toUpperCase();
 
-    const options = [correctOption];
-    const others = pool.filter(l => l !== correctOption);
+    // FIXED: use a bounded selection instead of a potentially unbounded random loop.
+    const distractors = [...new Set(pool.filter(letter => letter !== correctOption))]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
 
-    while (options.length < 4 && others.length > 0) {
-      const rand = others[Math.floor(Math.random() * others.length)];
-      if (!options.includes(rand)) options.push(rand);
-    }
-
-    return options.sort(() => Math.random() - 0.5);
+    return [correctOption, ...distractors].sort(() => Math.random() - 0.5);
   }
 
   const handleAnswer = (selected) => {

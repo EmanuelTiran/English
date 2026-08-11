@@ -68,13 +68,14 @@ const ItemMatchingApp = ({
 
   function generateOptions(correct) {
     const correctOption = getCorrectOption(correct);
-    const options = [correctOption];
-    const others = getOptionPool(correct).filter(i => i !== correctOption);
-    while (options.length < 4 && others.length > 0) {
-      const rand = others[Math.floor(Math.random() * others.length)];
-      if (!options.includes(rand)) options.push(rand);
-    }
-    return options.sort(() => Math.random() - 0.5);
+    // FIXED: choose from a finite unique pool so fewer than four items cannot cause an infinite loop.
+    const distractors = [...new Set(
+      getOptionPool(correct).filter(item => item !== correctOption)
+    )]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
+    return [correctOption, ...distractors].sort(() => Math.random() - 0.5);
   }
 
   const handleAnswer = (selected) => {

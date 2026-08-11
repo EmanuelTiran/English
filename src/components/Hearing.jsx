@@ -120,13 +120,14 @@ const Hearing = ({ sentences }) => {
     };
 
     function generateOptions(correct) {
-        const options = [correct];
-        const others = sentencesList.filter(s => s !== correct);
-        while (options.length < 4 && others.length > 0) {
-            const rand = others[Math.floor(Math.random() * others.length)];
-            if (!options.includes(rand)) options.push(rand);
-        }
-        return options.sort(() => Math.random() - 0.5);
+        // FIXED: bounded unique distractors prevent a freeze with short or duplicated sentence lists.
+        const distractors = [...new Set(
+            sentencesList.filter(sentence => sentence !== correct)
+        )]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3);
+
+        return [correct, ...distractors].sort(() => Math.random() - 0.5);
     }
 
     const handleAnswer = (selected) => {

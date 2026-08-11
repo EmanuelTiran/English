@@ -64,13 +64,12 @@ const FoodMatchingApp = ({ foodItems }) => {
       
 
     function generateOptions(correct) {
-        const options = [correct];
-        const otherFoodItems = foodItems.filter(item => item !== correct);
-        while (options.length < 4 && otherFoodItems.length > 0) {
-            const rand = otherFoodItems[Math.floor(Math.random() * otherFoodItems.length)];
-            if (!options.includes(rand)) options.push(rand);
-        }
-        return options.sort(() => Math.random() - 0.5);
+        // FIXED: a finite unique pool prevents freezing when fewer than four foods were selected.
+        const distractors = [...new Set(foodItems.filter(item => item !== correct))]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3);
+
+        return [correct, ...distractors].sort(() => Math.random() - 0.5);
     }
 
     const handleAnswer = (selected) => {
