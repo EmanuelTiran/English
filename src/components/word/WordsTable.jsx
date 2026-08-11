@@ -3,7 +3,8 @@ import { Plus, Trash2, RefreshCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { words } from "../../words";
 import NavBar from "../NavBar";
-import Button from "./Button";
+
+// FIXED: removed an unused Button import and an unused legacy-format lookup for CI linting.
 
 const speakWord = (word) => {
     const utter = new SpeechSynthesisUtterance(word);
@@ -30,7 +31,6 @@ export default function WordsTable({
         stored.forEach((wordObj, index) => {
             if (typeof wordObj === 'string') {
                 // תמיכה בפורמט ישן - מחרוזת בלבד
-                const fullWord = words.find(word => word.en === wordObj) || { en: wordObj, he: "" };
                 initialMap.set(wordObj, index + 1);
             } else if (wordObj && wordObj.en) {
                 // פורמט חדש - אובייקט עם en ו-he

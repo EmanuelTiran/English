@@ -1,5 +1,6 @@
 import React from 'react';
-import UndoButton from './UndoButton';
+
+// FIXED: removed the unused UndoButton import so the Netlify CI build stays warning-free.
 
 function AboutPage() {
   return (

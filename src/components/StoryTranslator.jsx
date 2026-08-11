@@ -21,7 +21,7 @@ const StoryReaderApp = () => {
   const readStory = () => {
     if (!selectedStory) return;
 
-    const words = selectedStory.text.split(' ');
+    // FIXED: removed an unused words variable; highlighting performs its own split when rendering.
     setCurrentWordIndex(0);
     setIsReading(true);
 

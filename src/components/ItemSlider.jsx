@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "./NavBar";
@@ -28,17 +28,18 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
 
   const current = content[index];
 
-  const goPrev = () => {
+  // FIXED: stable callbacks keep the keyboard listener current without being recreated on every render.
+  const goPrev = useCallback(() => {
     playClickSound();
     setDirection(-1);
     setIndex((prev) => (prev === 0 ? content.length - 1 : prev - 1));
-  };
+  }, [content.length]);
 
-  const goNext = () => {
+  const goNext = useCallback(() => {
     playClickSound();
     setDirection(1);
     setIndex((prev) => (prev + 1) % content.length);
-  };
+  }, [content.length]);
 
   useEffect(() => {
     if (current) speakText(current);
@@ -51,7 +52,7 @@ export default function ItemSlider({ items = [], itemIcons = {}, letters = false
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, []);
+  }, [goNext, goPrev]);
 
   if (content.length === 0) {
     return (

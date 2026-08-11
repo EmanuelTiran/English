@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+
+// FIXED: App already owns BrowserRouter, so AppRoutes imports only the route components it uses.
 
 import AboutPage from "./AboutPage";
 import Hearing from "./Hearing";

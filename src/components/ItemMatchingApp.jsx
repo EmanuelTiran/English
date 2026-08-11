@@ -64,7 +64,8 @@ const ItemMatchingApp = ({
       backgroundAudio.pause();
       backgroundAudio.currentTime = 0;
     };
-  }, []);
+  // FIXED: backgroundAudio is the stable Audio instance used and cleaned up by this effect.
+  }, [backgroundAudio]);
 
   function generateOptions(correct) {
     const correctOption = getCorrectOption(correct);

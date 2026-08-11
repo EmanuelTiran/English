@@ -1,9 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import Header from './components/Header';
-import { AppProvider, useAppContext } from "./components/useAppContext";
+import { AppProvider } from "./components/useAppContext";
 import { AppRoutes } from "./components/AppRoutes";
+
+// FIXED: removed unused imports so CI builds do not treat ESLint warnings as errors.
 
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "../NavBar";
@@ -27,19 +27,20 @@ export default function WordsSlider({ navLinks = [] }) {
 
   const current = words[index] || { en: "", he: "" };
 
-  const goPrev = () => {
+  // FIXED: stable callbacks let the keyboard effect declare complete dependencies.
+  const goPrev = useCallback(() => {
     if (words.length === 0) return;
     playClickSound();
     setDirection(-1);
     setIndex((prev) => (prev === 0 ? words.length - 1 : prev - 1));
-  };
+  }, [words.length]);
 
-  const goNext = () => {
+  const goNext = useCallback(() => {
     if (words.length === 0) return;
     playClickSound();
     setDirection(1);
     setIndex((prev) => (prev + 1) % words.length);
-  };
+  }, [words.length]);
 
   useEffect(() => {
     if (current.en) {
@@ -54,7 +55,7 @@ export default function WordsSlider({ navLinks = [] }) {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [words]);
+  }, [goNext, goPrev]);
 
   const variants = {
     enter: (direction) => ({
